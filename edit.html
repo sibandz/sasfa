@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Manager Login - Curro Halala Cup</title>
+    <title>Manager Login - Halala Cup</title>
     <style>
         :root {
             --navy: #002347;
@@ -37,7 +37,9 @@
             gap: 12px;
             flex-wrap: wrap;
         }
-        .logo-area {
+        .logo-container { display: flex; align-items: center; gap: 15px; }
+        .sasfa-logo { height: 30px; width: auto; }
+        .logo-area { 
             font-size: 1.2rem;
             font-weight: 800;
             letter-spacing: 0.1em;
@@ -56,6 +58,7 @@
             font-weight: 700;
             transition: background 0.2s;
         }
+        .watch-live-btn svg { width: 16px; height: 16px; fill: var(--navy); }
         .watch-live-btn:hover { background: #dbe9ff; }
         .page-title { padding: 24px 16px 0; }
         .page-title h1 { margin: 0; font-size: 2rem; }
@@ -124,10 +127,19 @@
 
 <header>
     <div class="header-top">
-        <div class="logo-area">CURRO<span>Halala Cup</span></div>
+        <div class="logo-container">
+            <img src="https://via.placeholder.com/120x30/002347/FFFFFF?text=SASFA" alt="SASFA Logo" class="sasfa-logo">
+            <div class="logo-area">HALALA<span>Cup</span></div>
+        </div>
         <div>
-            <a href="index.html" class="watch-live-btn">👀 Public Fixtures</a>
-            <a href="https://supersportschools.com/" class="watch-live-btn" target="_blank">📺 Watch Live</a>
+            <a href="index.html" class="watch-live-btn">
+                <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm-2-9.5l4.5 4.5-1.41 1.41-4.5-4.5-1.09 1.09L12 16.01l4.5-4.51-1.41-1.41-4.5 4.5-2.5-2.5L12 8.01l4.5 4.5-1.41 1.41-4.5-4.5z" opacity=".3"></path><path d="M12 4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"></path></svg>
+                <span>Public Fixtures</span>
+            </a>
+            <a href="https://supersportschools.com/" class="watch-live-btn" target="_blank">
+                <svg viewBox="0 0 24 24"><path d="M10 16.5v-9l6 4.5-6 4.5zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
+                <span>Watch Live</span>
+            </a>
         </div>
     </div>
 </header>
@@ -204,9 +216,9 @@
 </div>
 
 <script>
-    const STORAGE_KEY = 'curro-halala-cup-data';
-    const AUTH_FLAG = 'curro-halalacup-auth';
-    const EDIT_PASSWORD = 'halala';
+    const STORAGE_KEY = 'halala-cup-data';
+    const AUTH_FLAG = 'halalacup-auth';
+    const EDIT_PASSWORD = 'halala'; // This remains the same
 
     const DEFAULT_TOURNAMENT_DATA = {
         "Gauteng 1": {
