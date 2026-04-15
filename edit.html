@@ -1,245 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curro Halala Cup 2026 | Fixtures & Live Results</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manager Login - Curro Halala Cup</title>
     <style>
-        /* PDF BRAND COLORS & LAYOUT VARS */
         :root {
-            --navy-dark: #001A35; /* Deep Navy from references */
-            --navy-med: #002147; 
-            --lime: #A0D61D; /* Bright Lime Green */
+            --navy: #002347;
+            --navy-med: #003f72;
+            --text-main: #12243a;
+            --text-muted: #5b6470;
             --white: #ffffff;
-            --page-bg: #f4f7f6; /* Light grey background like image */
-            --card-border: #e1e8ed;
-            --text-main: #333333;
-            --text-muted: #888888;
+            --card-border: #d8e1ea;
+            --lime: #e0ff61;
+            --bg: #f8fbff;
         }
-
-        /* RESET & BASE STYLES */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', 'Segoe UI', Roboto, sans-serif; }
-        body { background-color: var(--page-bg); color: var(--text-main); -webkit-font-smoothing: antialiased; padding-bottom: 50px;}
-
-        /* --- MODERN HEADER (Image-inspired) --- */
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(180deg, #f5f9ff 0%, #f8fbff 100%);
+            color: var(--text-main);
+        }
         header {
-            background-color: var(--navy-dark);
-            color: var(--white);
-            padding: 15px 20px;
-            border-bottom: 4px solid var(--lime);
+            padding: 20px 16px;
+            background: var(--white);
+            border-bottom: 1px solid #e4e9f2;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
-
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
+            gap: 12px;
+            flex-wrap: wrap;
         }
-
-        .logo-area { font-size: 1.4rem; font-weight: 800; letter-spacing: -1px; color: var(--lime); }
-        .logo-area span { color: var(--white); font-weight: 400; font-size: 0.9rem; margin-left: 5px;}
-
-        .watch-live-btn {
-            background-color: var(--lime);
-            color: var(--navy-dark);
-            text-decoration: none;
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            transition: transform 0.2s;
-        }
-        .watch-live-btn:hover { transform: scale(1.05); }
-
-        .hero-title-area {
-            background-color: #001226; /* Slightly darker */
-            padding: 40px 20px;
-            text-align: center;
-        }
-        .hero-title-area h1 {
-            font-size: 2.2rem;
-            text-transform: uppercase;
-            font-weight: 900;
-            color: var(--white);
-            letter-spacing: 1px;
-        }
-        .hero-title-area p { color: var(--text-muted); font-size: 1rem; margin-top: 5px;}
-
-        /* --- REGION FILTER BAR --- */
-        .filter-bar {
-            background: var(--white);
-            border-bottom: 1px solid var(--card-border);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .filter-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            overflow-x: auto;
-            padding: 10px 15px;
-            gap: 8px;
-            -webkit-overflow-scrolling: touch;
-        }
-        .filter-container::-webkit-scrollbar { display: none; } /* Hide scrollbar */
-
-        .region-btn {
-            background: none;
-            border: 1px solid transparent;
-            color: var(--text-main);
-            padding: 8px 16px;
-            border-radius: 20px;
-            white-space: nowrap;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .region-btn:hover { background-color: #f0f0f0; }
-        .region-btn.active {
-            background-color: var(--navy-med);
-            color: var(--lime);
-            border-color: var(--navy-med);
-        }
-
-        /* --- MAIN CONTENT & CONTAINERS --- */
-        .main-container {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 0 15px;
-        }
-
-        .date-divider {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--navy-med);
-            margin: 30px 0 15px 5px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* --- MATCH CARDS (Image Style) --- */
-        .match-card {
-            background: var(--white);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            margin-bottom: 12px;
-            transition: box-shadow 0.3s, transform 0.2s;
-            overflow: hidden;
-        }
-        .match-card:hover {
-            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-            transform: translateY(-2px);
-        }
-
-        /* Card Top (Comp Name & Status) */
-        .mc-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
-            border-bottom: 1px solid #f0f0f0;
-            background-color: #fafafa;
-        }
-        .mc-comp { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
-        .mc-status {
-            font-size: 0.7rem;
+        .logo-area {
+            font-size: 1.2rem;
             font-weight: 800;
-            text-transform: uppercase;
-            padding: 3px 8px;
-            border-radius: 4px;
-            color: var(--text-muted);
-            background: #eee;
+            letter-spacing: 0.1em;
         }
-
-        /* Dynamic Status Coloring */
-        .match-card.LIVE .mc-status {
-            background-color: #ff0000;
-            color: white;
-            animation: pulse 2s infinite;
-        }
-        .match-card.FINAL .mc-status {
-            background-color: var(--lime);
-            color: var(--navy-dark);
-        }
-        @keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.5;} 100% {opacity: 1;} }
-
-        /* Card Body (The Match) */
-        .mc-body {
-            display: grid;
-            grid-template-columns: 1fr 100px 1fr;
+        .logo-area span { color: var(--navy-med); }
+        .watch-live-btn {
+            display: inline-flex;
             align-items: center;
-            padding: 20px 15px;
-            text-align: center;
-        }
-
-        .mc-team { font-weight: 700; font-size: 1.1rem; color: var(--navy-dark); }
-        
-        .mc-score-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .mc-score {
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: var(--navy-dark);
-            letter-spacing: -2px;
-            display: flex;
-            gap: 5px;
-        }
-        .mc-time {
-            font-size: 0.9rem;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--navy);
+            background: #e8f0ff;
+            border: 1px solid rgba(0, 52, 114, 0.14);
+            padding: 12px 16px;
+            border-radius: 999px;
             font-weight: 700;
-            color: var(--text-main);
-            background: #f0f0f0;
-            padding: 5px 10px;
-            border-radius: 4px;
+            transition: background 0.2s;
         }
-        .mc-vs { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; margin-top: 2px;}
-
-        /* Champions League reference from PDF */
-        .champions-walkon {
-            font-size: 0.65rem;
-            color: #ffcccc;
-            font-style: italic;
-            margin-top: 3px;
-        }
-
-        /* --- POOL STANDINGS TABLES --- */
-        .standings-area { margin-bottom: 40px; }
-        .pool-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        
-        @media (max-width: 768px) {
-            .pool-container { grid-template-columns: 1fr; }
-            .mc-body { grid-template-columns: 1fr; gap: 10px;}
-            .mc-team { font-size: 1rem; }
-            .mc-score { font-size: 1.8rem; }
-            .hero-title-area h1 { font-size: 1.8rem; }
-        }
-
-        .pool-card {
+        .watch-live-btn:hover { background: #dbe9ff; }
+        .page-title { padding: 24px 16px 0; }
+        .page-title h1 { margin: 0; font-size: 2rem; }
+        .page-title p { margin: 8px 0 0; color: var(--text-muted); }
+        .main-container { max-width: 980px; margin: 0 auto; padding: 20px 16px 40px; }
+        .page-card {
             background: var(--white);
             border: 1px solid var(--card-border);
-            border-radius: 8px;
-            padding: 15px;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
         }
-        .pool-title { font-weight: 800; color: var(--navy-med); text-transform: uppercase; font-size: 0.9rem; margin-bottom: 10px; }
-
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        th { text-align: left; color: var(--text-muted); padding: 8px; border-bottom: 2px solid #eee; font-weight: 600;}
-        td { padding: 10px 8px; border-bottom: 1px solid #f0f0f0; }
-        .col-team { font-weight: 600; color: var(--navy-dark); }
-        .col-data { text-align: center; font-weight: 700; width: 40px; }
-
-        footer { text-align: center; padding: 40px 20px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; border-top: 1px solid #eee; margin-top: 40px;}
-
+        .card-title { margin: 0 0 20px; font-size: 1.25rem; font-weight: 800; }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+        @media (max-width: 720px) { .form-row { grid-template-columns: 1fr; } }
+        label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+        input, select {
+            width: 100%;
+            margin-top: 8px;
+            border-radius: 14px;
+            border: 1px solid #d8e1ea;
+            background: #f8fbff;
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 14px;
+            padding: 14px 18px;
+            color: #fff;
+            background: var(--navy-med);
+            font-size: 0.95rem;
+            font-weight: 800;
+            transition: background 0.2s;
+        }
+        button:hover { background: #002a56; }
+        .hint { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin-top: 14px; }
+        .status-pill { display: inline-flex; align-items: center; justify-content: center; padding: 8px 14px; border-radius: 999px; background: #eef5ff; color: var(--navy); font-weight: 700; font-size: 0.85rem; }
+        .hidden { display: none; }
+        .form-footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; margin-top: 12px; }
+        .note-box {
+            margin-top: 24px;
+            padding: 18px 20px;
+            border-radius: 18px;
+            background: #f3f7ff;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        .small-copy { font-size: 0.85rem; color: var(--text-muted); }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -247,47 +126,89 @@
     <div class="header-top">
         <div class="logo-area">CURRO<span>Halala Cup</span></div>
         <div>
+            <a href="index.html" class="watch-live-btn">👀 Public Fixtures</a>
             <a href="https://supersportschools.com/" class="watch-live-btn" target="_blank">📺 Watch Live</a>
-            <a href="edit.html" class="watch-live-btn">🔐 Manager Login</a>
         </div>
     </div>
 </header>
 
-<div class="hero-title-area">
-    <h1>Fixtures & Results</h1>
-    <p>Regional Qualification Tournament 2026</p>
-</div>
-
-<div class="filter-bar">
-    <div class="filter-container" id="regNav">
-        </div>
+<div class="page-title">
+    <h1>Manager Login</h1>
+    <p>Only authorized staff can update fixtures and results.</p>
 </div>
 
 <div class="main-container">
+    <div class="page-card">
+        <div id="authSection">
+            <h2 class="card-title">Sign in to edit</h2>
+            <form id="loginForm">
+                <div style="margin-bottom: 18px;">
+                    <label for="password">Manager password</label>
+                    <input id="password" type="password" autocomplete="current-password" placeholder="Enter password" required />
+                </div>
+                <button type="submit">Login</button>
+                <div id="loginError" style="color: #8f1a1a; font-size: 0.9rem; margin-top: 10px; display: none;"></div>
+                <p class="hint">This is a local browser-side editor. Updates are saved in your browser storage and reflected on the public fixtures page.</p>
+            </form>
+        </div>
 
-    <div class="standings-area">
-        <div class="date-divider">Current Standings</div>
-        <div class="pool-container" id="standingsContainer">
+        <div id="editorSection" class="hidden">
+            <h2 class="card-title">Editor Panel</h2>
+            <div class="form-row">
+                <label>Region
+                    <select id="regionSelect"></select>
+                </label>
+                <label>Match
+                    <select id="matchSelect"></select>
+                </label>
             </div>
-    </div>
-
-    <div class="fixtures-area">
-        <div class="date-divider">Match Schedule</div>
-        <div id="matchesContainer">
+            <div class="form-row">
+                <label>Status
+                    <select id="editStatus">
+                        <option value="UPCOMING">UPCOMING</option>
+                        <option value="LIVE">LIVE</option>
+                        <option value="FINAL">FINAL</option>
+                    </select>
+                </label>
+                <label>Time
+                    <input id="editTime" type="text" placeholder="HH:MM" />
+                </label>
             </div>
-    </div>
+            <div class="form-row">
+                <label>Home score
+                    <input id="editScore1" type="number" min="0" />
+                </label>
+                <label>Away score
+                    <input id="editScore2" type="number" min="0" />
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Home team
+                    <input id="editTeam1" type="text" placeholder="Team 1 name" />
+                </label>
+                <label>Away team
+                    <input id="editTeam2" type="text" placeholder="Team 2 name" />
+                </label>
+            </div>
+            <div class="form-footer">
+                <button id="saveButton" type="button">Save update</button>
+                <div class="status-pill" id="saveStatus">Not saved</div>
+            </div>
+            <p class="hint">After saving, refresh the public fixtures page to see the latest results.</p>
+        </div>
 
-    <footer>
-        <strong>Curro Halala Cup Regional Rules:</strong><br>
-        2 x 30 min halves | 10 min break<br>
-        Points: Win (2), Draw (1), Loss (0)<br>
-        Top 2 teams per region qualify for National Finals.
-    </footer>
+        <div class="note-box">
+            <p class="small-copy">Password is stored only in this page for demonstration. For real deployments, use a secure backend authentication system.</p>
+        </div>
+    </div>
 </div>
 
 <script>
-    // FULL DATASET RETAINED FROM PREVIOUS TURN
-    const tournamentData = {
+    const STORAGE_KEY = 'curro-halala-cup-data';
+    const AUTH_FLAG = 'curro-halalacup-auth';
+    const EDIT_PASSWORD = 'halala';
+
+    const DEFAULT_TOURNAMENT_DATA = {
         "Gauteng 1": {
             pools: {
                 "Pool A": [
@@ -340,11 +261,11 @@
                 { d: "Friday 17 April", t: "15:30", t1: "Mondeor High", t2: "Vaal High", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Saturday 18 April", t: "11:00", t1: "Rosina Sedibane", t2: "Curro Protea Glen", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Saturday 18 April", t: "12:30", t1: "Curro Pretoria", t2: "Curro Hazeldean", s1: 0, s2: 0, st: "UPCOMING" },
-                { d: "Saturday 18 April", t: "14:00", t1: "Mondeor High", t2: "Curro Aurora", s1: 0, s2: 0, st: "UPCOMING" },
+                { d: "Saturday 18 April", t: "14:00", t1: "Curro Aurora", t2: "Curro Midrand", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Saturday 18 April", t: "15:30", t1: "Vaal High", t2: "Curro Midrand", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "09:00", t1: "Rosina Sedibane", t2: "Curro Hazeldean", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "10:30", t1: "Curro Protea Glen", t2: "Curro Pretoria", s1: 0, s2: 0, st: "UPCOMING" },
-                { d: "Sunday 19 April", t: "12:00", t1: "Mondeor High School", t2: "Vaal High School", s1: 0, s2: 0, st: "UPCOMING" },
+                { d: "Sunday 19 April", t: "12:00", t1: "Curro Aurora", t2: "Curro Midrand", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "13:30", t1: "Curro Aurora", t2: "Curro Midrand", s1: 0, s2: 0, st: "UPCOMING" }
             ]
         },
@@ -527,11 +448,27 @@
                 { d: "Sunday 19 April", t: "12:00", t1: "Curro Wilgeheuwel", t2: "Woodhill College", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "13:30", t1: "Waterstone College", t2: "Steyn City School", s1: 0, s2: 0, st: "UPCOMING" }
             ]
-        },
+        }
     };
 
-    let activeRegion = "Gauteng 1";
-    const STORAGE_KEY = 'curro-halala-cup-data';
+    let tournamentData = JSON.parse(JSON.stringify(DEFAULT_TOURNAMENT_DATA));
+    let activeRegion = Object.keys(tournamentData)[0];
+    let activeMatchIndex = 0;
+
+    const authSection = document.getElementById('authSection');
+    const editorSection = document.getElementById('editorSection');
+    const passwordInput = document.getElementById('password');
+    const regionSelect = document.getElementById('regionSelect');
+    const matchSelect = document.getElementById('matchSelect');
+    const editStatus = document.getElementById('editStatus');
+    const editTime = document.getElementById('editTime');
+    const editScore1 = document.getElementById('editScore1');
+    const editScore2 = document.getElementById('editScore2');
+    const editTeam1 = document.getElementById('editTeam1');
+    const editTeam2 = document.getElementById('editTeam2');
+    const saveStatus = document.getElementById('saveStatus');
+    const loginForm = document.getElementById('loginForm');
+    const saveButton = document.getElementById('saveButton');
 
     function loadSavedData() {
         try {
@@ -552,79 +489,107 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(tournamentData));
     }
 
-    function updateView() {
-        const nav = document.getElementById('regNav');
-        const standings = document.getElementById('standingsContainer');
-        const matches = document.getElementById('matchesContainer');
+    function setSaveStatus(message, success = true) {
+        saveStatus.textContent = message;
+        saveStatus.style.background = success ? '#eef8f4' : '#ffe8e8';
+        saveStatus.style.color = success ? '#0f5a30' : '#8f1a1a';
+    }
 
-        // 1. Render Nav
-        nav.innerHTML = Object.keys(tournamentData).map(r => 
-            `<button class="region-btn ${r === activeRegion ? 'active' : ''}" onclick="changeRegion('${r}')">${r}</button>`
+    function populateRegionOptions() {
+        regionSelect.innerHTML = Object.keys(tournamentData).map(region =>
+            `<option value="${region}">${region}</option>`
         ).join('');
-
-        const regionData = tournamentData[activeRegion];
-
-        // 2. Render Standings
-        standings.innerHTML = Object.keys(regionData.pools).map(p => `
-            <div class="pool-card">
-                <div class="pool-title">${p}</div>
-                <table>
-                    <tr><th>Team</th><th class="col-data">GD</th><th class="col-data">Seed</th><th class="col-data">Pts</th></tr>
-                    ${regionData.pools[p].sort((a,b) => a.name.localeCompare(b.name)).map(team => `<tr><td class="col-team">${team.name}</td><td class="col-data">${team.gd}</td><td class="col-data">${team.seed}</td><td class="col-data col-pts">${team.points}</td></tr>`).join('')}
-                </table>
-            </div>
-        `).join('');
-
-        // 3. Render Matches (Grouped by Date like reference image)
-        let matchesHtml = "";
-        let currentDate = "";
-
-        regionData.matches.forEach(m => {
-            if (m.d !== currentDate) {
-                currentDate = m.d;
-                matchesHtml += `<div class="date-divider">${currentDate}</div>`;
-            }
-
-            // Determine score area content based on status
-            let scoreContent = "";
-            let specialClass = "";
-            if(m.st === "UPCOMING") {
-                scoreContent = `<div class="mc-time">${m.t}</div><div class="mc-vs">vs</div>`;
-            } else {
-                scoreContent = `<div class="mc-score"><span>${m.s1}</span><span>-</span><span>${m.s2}</span></div>`;
-                specialClass = m.st; // LIVE or FINAL
-            }
-
-            // Champions League walk-on reference from PDF rules for LIVE games
-            let liveFlavour = m.st === "LIVE" ? '<div class="champions-walkon">Walk-on protocol</div>' : '';
-
-            matchesHtml += `
-                <div class="match-card ${specialClass}">
-                    <div class="mc-header">
-                        <div class="mc-comp">${activeRegion} Regional</div>
-                        <div class="mc-status">${m.st} ${liveFlavour}</div>
-                    </div>
-                    <div class="mc-body">
-                        <div class="mc-team mc-team1">${m.t1}</div>
-                        <div class="mc-score-area">
-                            ${scoreContent}
-                        </div>
-                        <div class="mc-team mc-team2">${m.t2}</div>
-                    </div>
-                </div>
-            `;
-        });
-        matchesContainer.innerHTML = matchesHtml;
+        regionSelect.value = activeRegion;
+        populateMatchOptions();
     }
 
-    function changeRegion(r) { 
-        activeRegion = r; 
-        updateView(); 
-        // Auto scroll filter bar to active item on mobile
-        document.querySelector('.region-btn.active').scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    function populateMatchOptions() {
+        const matches = tournamentData[activeRegion].matches;
+        matchSelect.innerHTML = matches.map((match, index) =>
+            `<option value="${index}">${match.d} ${match.t} — ${match.t1} vs ${match.t2}</option>`
+        ).join('');
+        if (activeMatchIndex >= matches.length) {
+            activeMatchIndex = 0;
+        }
+        matchSelect.value = activeMatchIndex;
+        fillEditorForm();
     }
+
+    function fillEditorForm() {
+        const match = tournamentData[activeRegion].matches[activeMatchIndex];
+        editStatus.value = match.st || 'UPCOMING';
+        editTime.value = match.t || '';
+        editScore1.value = match.s1 != null ? match.s1 : '';
+        editScore2.value = match.s2 != null ? match.s2 : '';
+        editTeam1.value = match.t1 || '';
+        editTeam2.value = match.t2 || '';
+        setSaveStatus('Loaded current match details.');
+    }
+
+    function changeRegion() {
+        activeRegion = regionSelect.value;
+        activeMatchIndex = 0;
+        populateMatchOptions();
+    }
+
+    function changeMatch() {
+        activeMatchIndex = parseInt(matchSelect.value, 10) || 0;
+        fillEditorForm();
+    }
+
+    function showLogin() {
+        authSection.classList.remove('hidden');
+        editorSection.classList.add('hidden');
+    }
+
+    function showEditor() {
+        authSection.classList.add('hidden');
+        editorSection.classList.remove('hidden');
+        regionSelect.value = activeRegion;
+        populateMatchOptions();
+    }
+
+    function handleLogin(event) {
+        event.preventDefault();
+        const value = passwordInput.value.trim();
+        const loginError = document.getElementById('loginError');
+        if (value === EDIT_PASSWORD) {
+            loginError.style.display = 'none';
+            sessionStorage.setItem(AUTH_FLAG, 'true');
+            passwordInput.value = '';
+            showEditor();
+        } else {
+            loginError.textContent = 'Incorrect password. Please try again.';
+            loginError.style.display = 'block';
+            passwordInput.focus();
+        }
+    }
+
+    function handleSave() {
+        const match = tournamentData[activeRegion].matches[activeMatchIndex];
+        match.st = editStatus.value;
+        match.t = editTime.value.trim() || match.t;
+        match.s1 = Number(editScore1.value || 0);
+        match.s2 = Number(editScore2.value || 0);
+        match.t1 = editTeam1.value.trim() || match.t1;
+        match.t2 = editTeam2.value.trim() || match.t2;
+        saveData();
+        populateMatchOptions();
+        setSaveStatus('Saved successfully. Refresh public page to view updates.');
+    }
+
+    loginForm.addEventListener('submit', handleLogin);
+    saveButton.addEventListener('click', handleSave);
+    regionSelect.addEventListener('change', changeRegion);
+    matchSelect.addEventListener('change', changeMatch);
+
     loadSavedData();
-    updateView();
+    if (sessionStorage.getItem(AUTH_FLAG) === 'true') {
+        showEditor();
+    } else {
+        showLogin();
+    }
+    populateRegionOptions();
 </script>
 
 </body>
