@@ -351,7 +351,7 @@
             .content-grid {
                 grid-template-columns: 1fr; /* Stack all columns */
             }
-            .social-col { display: block; order: -1; margin-bottom: 20px; } /* Show it again and move to top */
+            .social-col { display: block; order: 3; margin-top: 30px; margin-bottom: 0; } /* Show it again and move to bottom */
             .pool-container { grid-template-columns: 1fr; }
             .match-card {
                 border-radius: 12px; /* Slightly smaller radius */
@@ -459,6 +459,18 @@
             filter: invert(1) brightness(1.5);
             opacity: 0.6;
         }
+        .footer-admin-link {
+            margin-top: 30px;
+            font-size: 0.75rem;
+        }
+        .footer-admin-link a {
+            color: var(--text-muted);
+            text-decoration: none;
+            opacity: 0.8;
+        }
+        .footer-admin-link a:hover {
+            opacity: 1;
+        }
 
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -477,10 +489,6 @@
                 <a href="https://live.supersportschools.com/category/606f65f91eea03755e56797c/sub-category/67ff624559d9be83280028c6/" class="watch-live-btn" target="_blank">
                     <svg viewBox="0 0 24 24"><path d="M10 16.5v-9l6 4.5-6 4.5zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
                     <span>Watch Live</span>
-                </a>
-                <a href="edit.html" class="watch-live-btn">
-                    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z"></path></svg>
-                    <span>Manager Login</span>
                 </a>
                 <button id="theme-toggle" class="theme-btn" title="Toggle theme">
                     <svg class="moon-icon" viewBox="0 0 24 24"><path d="M10 2c-1.82 0-3.53.5-5 1.35C7.99 5.08 10 8.3 10 12s-2.01 6.92-5 8.65C6.47 21.5 8.18 22 10 22c5.52 0 10-4.48 10-10S15.52 2 10 2z"></path></svg>
@@ -546,6 +554,9 @@
         2 x 30 min halves | 10 min break<br>
         Points: Win (2), Draw (1), Loss (0)<br>
         Top 2 teams per region qualify for National Finals.
+        <div class="footer-admin-link">
+            <a href="edit.html">Manager Login</a>
+        </div>
     </footer>
 </div>
 
