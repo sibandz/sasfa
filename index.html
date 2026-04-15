@@ -85,7 +85,7 @@
             -webkit-overflow-scrolling: touch;
         }
         .filter-container::-webkit-scrollbar { display: none; } /* Hide scrollbar */
-
+ 
         .region-btn {
             background: none;
             border: 1px solid transparent;
@@ -105,6 +105,32 @@
             border-color: var(--navy-med);
         }
 
+        /* --- CONTENT TABS (Dribbble Inspired) --- */
+        .content-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 15px 12px 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            position: relative;
+            top: 1px;
+            border-bottom: 3px solid transparent;
+        }
+        .tab-btn.active {
+            color: var(--navy-dark);
+            border-bottom-color: var(--navy-dark);
+        }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+
         /* --- MAIN CONTENT & CONTAINERS --- */
         .main-container {
             max-width: 900px;
@@ -121,94 +147,64 @@
             letter-spacing: 1px;
         }
 
-        /* --- MATCH CARDS (Image Style) --- */
+        /* --- MODERN MATCH CARDS (Dribbble Inspired) --- */
         .match-card {
             background: var(--white);
             border: 1px solid var(--card-border);
-            border-radius: 8px;
-            margin-bottom: 12px;
-            transition: box-shadow 0.3s, transform 0.2s;
+            border-radius: 16px;
+            margin-bottom: 15px;
+            transition: box-shadow 0.3s;
             overflow: hidden;
+            position: relative;
         }
         .match-card:hover {
-            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,33,71,0.08);
         }
 
-        /* Card Top (Comp Name & Status) */
-        .mc-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
-            border-bottom: 1px solid #f0f0f0;
-            background-color: #fafafa;
-        }
-        .mc-comp { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
-        .mc-status {
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            padding: 3px 8px;
-            border-radius: 4px;
-            color: var(--text-muted);
-            background: #eee;
-        }
-
-        /* Dynamic Status Coloring */
-        .match-card.LIVE .mc-status {
-            background-color: #ff0000;
-            color: white;
-            animation: pulse 2s infinite;
-        }
-        .match-card.FINAL .mc-status {
-            background-color: var(--lime);
-            color: var(--navy-dark);
-        }
-        @keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.5;} 100% {opacity: 1;} }
-
-        /* Card Body (The Match) */
         .mc-body {
             display: grid;
-            grid-template-columns: 1fr 100px 1fr;
+            grid-template-columns: 1fr 120px 1fr;
             align-items: center;
-            padding: 20px 15px;
-            text-align: center;
+            padding: 25px 20px;
+            gap: 15px;
         }
 
-        .mc-team { font-weight: 700; font-size: 1.1rem; color: var(--navy-dark); }
+        .mc-team {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--navy-dark);
+        }
+        .mc-team1 { text-align: right; }
+        .mc-team2 { text-align: left; }
         
         .mc-score-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            text-align: center;
         }
         .mc-score {
             font-size: 2.2rem;
-            font-weight: 900;
+            font-weight: 800;
             color: var(--navy-dark);
-            letter-spacing: -2px;
             display: flex;
-            gap: 5px;
+            justify-content: center;
+            gap: 8px;
         }
         .mc-time {
-            font-size: 0.9rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            color: var(--text-main);
-            background: #f0f0f0;
-            padding: 5px 10px;
-            border-radius: 4px;
+            color: var(--navy-dark);
         }
-        .mc-vs { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; margin-top: 2px;}
-
-        /* Champions League reference from PDF */
-        .champions-walkon {
-            font-size: 0.65rem;
-            color: #ffcccc;
-            font-style: italic;
-            margin-top: 3px;
+        .mc-status-text {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 5px;
+            color: var(--text-muted);
         }
+        .match-card.LIVE .mc-status-text {
+            color: #ff4d4d;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.6;} 100% {opacity: 1;} }
 
         /* --- POOL STANDINGS TABLES --- */
         .standings-area { margin-bottom: 40px; }
@@ -236,6 +232,13 @@
         .col-team { font-weight: 600; color: var(--navy-dark); }
         .col-data { text-align: center; font-weight: 700; width: 40px; }
 
+        .no-matches {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            background-color: var(--white);
+            border-radius: 16px;
+        }
         footer { text-align: center; padding: 40px 20px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; border-top: 1px solid #eee; margin-top: 40px;}
 
     </style>
@@ -265,16 +268,21 @@
 
 <div class="main-container">
 
-    <div class="standings-area">
-        <div class="date-divider">Current Standings</div>
-        <div class="pool-container" id="standingsContainer">
+    <div class="content-tabs" id="contentTabs"></div>
+
+    <div id="standingsContent" class="tab-pane">
+        <div class="standings-area">
+            <div class="date-divider">Current Standings</div>
+            <div class="pool-container" id="standingsContainer">
             </div>
+        </div>
     </div>
 
-    <div class="fixtures-area">
-        <div class="date-divider">Match Schedule</div>
-        <div id="matchesContainer">
+    <div id="matchesContent" class="tab-pane">
+        <div class="fixtures-area">
+            <div id="matchesContainer">
             </div>
+        </div>
     </div>
 
     <footer>
@@ -531,6 +539,8 @@
     };
 
     let activeRegion = "Gauteng 1";
+    let activeContentTab = 'Upcoming';
+    const contentTabs = ['Upcoming', 'Live', 'Finished', 'Standings'];
     const STORAGE_KEY = 'curro-halala-cup-data';
 
     function loadSavedData() {
@@ -554,67 +564,89 @@
 
     function updateView() {
         const nav = document.getElementById('regNav');
-        const standings = document.getElementById('standingsContainer');
-        const matches = document.getElementById('matchesContainer');
+        const contentTabsContainer = document.getElementById('contentTabs');
+        const standingsContent = document.getElementById('standingsContent');
+        const matchesContent = document.getElementById('matchesContent');
+        const standingsContainer = document.getElementById('standingsContainer');
+        const matchesContainer = document.getElementById('matchesContainer');
 
         // 1. Render Nav
         nav.innerHTML = Object.keys(tournamentData).map(r => 
             `<button class="region-btn ${r === activeRegion ? 'active' : ''}" onclick="changeRegion('${r}')">${r}</button>`
         ).join('');
 
+        // 2. Render Content Tabs
+        contentTabsContainer.innerHTML = contentTabs.map(tab =>
+            `<button class="tab-btn ${tab === activeContentTab ? 'active' : ''}" onclick="changeContentTab('${tab}')">${tab}</button>`
+        ).join('');
+
+        // 3. Show/Hide correct content pane
+        standingsContent.classList.toggle('active', activeContentTab === 'Standings');
+        matchesContent.classList.toggle('active', activeContentTab !== 'Standings');
+
         const regionData = tournamentData[activeRegion];
 
-        // 2. Render Standings
-        standings.innerHTML = Object.keys(regionData.pools).map(p => `
-            <div class="pool-card">
-                <div class="pool-title">${p}</div>
-                <table>
-                    <tr><th>Team</th><th class="col-data">GD</th><th class="col-data">Seed</th><th class="col-data">Pts</th></tr>
-                    ${regionData.pools[p].sort((a,b) => a.name.localeCompare(b.name)).map(team => `<tr><td class="col-team">${team.name}</td><td class="col-data">${team.gd}</td><td class="col-data">${team.seed}</td><td class="col-data col-pts">${team.points}</td></tr>`).join('')}
-                </table>
-            </div>
-        `).join('');
-
-        // 3. Render Matches (Grouped by Date like reference image)
-        let matchesHtml = "";
-        let currentDate = "";
-
-        regionData.matches.forEach(m => {
-            if (m.d !== currentDate) {
-                currentDate = m.d;
-                matchesHtml += `<div class="date-divider">${currentDate}</div>`;
-            }
-
-            // Determine score area content based on status
-            let scoreContent = "";
-            let specialClass = "";
-            if(m.st === "UPCOMING") {
-                scoreContent = `<div class="mc-time">${m.t}</div><div class="mc-vs">vs</div>`;
-            } else {
-                scoreContent = `<div class="mc-score"><span>${m.s1}</span><span>-</span><span>${m.s2}</span></div>`;
-                specialClass = m.st; // LIVE or FINAL
-            }
-
-            // Champions League walk-on reference from PDF rules for LIVE games
-            let liveFlavour = m.st === "LIVE" ? '<div class="champions-walkon">Walk-on protocol</div>' : '';
-
-            matchesHtml += `
-                <div class="match-card ${specialClass}">
-                    <div class="mc-header">
-                        <div class="mc-comp">${activeRegion} Regional</div>
-                        <div class="mc-status">${m.st} ${liveFlavour}</div>
-                    </div>
-                    <div class="mc-body">
-                        <div class="mc-team mc-team1">${m.t1}</div>
-                        <div class="mc-score-area">
-                            ${scoreContent}
-                        </div>
-                        <div class="mc-team mc-team2">${m.t2}</div>
-                    </div>
+        // 4. Render content into the active pane
+        if (activeContentTab === 'Standings') {
+            standingsContainer.innerHTML = Object.keys(regionData.pools).map(p => `
+                <div class="pool-card">
+                    <div class="pool-title">${p}</div>
+                    <table>
+                        <tr><th>Team</th><th class="col-data">GD</th><th class="col-data">Pts</th></tr>
+                        ${regionData.pools[p]
+                            .sort((a,b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name))
+                            .map(team => `<tr><td class="col-team">${team.name}</td><td class="col-data">${team.gd}</td><td class="col-data col-pts">${team.points}</td></tr>`).join('')}
+                    </table>
                 </div>
-            `;
-        });
-        matchesContainer.innerHTML = matchesHtml;
+            `).join('');
+        } else {
+            let statusToFilter = activeContentTab.toUpperCase();
+            if (statusToFilter === 'FINISHED') statusToFilter = 'FINAL';
+
+            const filteredMatches = regionData.matches.filter(m => m.st === statusToFilter);
+
+            if (filteredMatches.length === 0) {
+                matchesContainer.innerHTML = `<div class="no-matches">No ${activeContentTab.toLowerCase()} matches for this region.</div>`;
+                return;
+            }
+
+            let matchesHtml = "";
+            let currentDate = "";
+
+            filteredMatches.forEach(m => {
+                if (m.d !== currentDate) {
+                    currentDate = m.d;
+                    matchesHtml += `<div class="date-divider">${currentDate}</div>`;
+                }
+
+                let scoreContent = "";
+                let specialClass = m.st;
+
+                if(m.st === "UPCOMING") {
+                    scoreContent = `
+                        <div class="mc-score-area">
+                            <div class="mc-time">${m.t}</div>
+                        </div>`;
+                } else { // LIVE or FINAL
+                    scoreContent = `
+                        <div class="mc-score-area">
+                            <div class="mc-score"><span>${m.s1}</span><span>-</span><span>${m.s2}</span></div>
+                            <div class="mc-status-text">${m.st === 'LIVE' ? 'LIVE' : 'Full Time'}</div>
+                        </div>`;
+                }
+
+                matchesHtml += `
+                    <div class="match-card ${specialClass}">
+                        <div class="mc-body">
+                            <div class="mc-team mc-team1">${m.t1}</div>
+                            ${scoreContent}
+                            <div class="mc-team mc-team2">${m.t2}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            matchesContainer.innerHTML = matchesHtml;
+        }
     }
 
     function changeRegion(r) { 
@@ -623,6 +655,12 @@
         // Auto scroll filter bar to active item on mobile
         document.querySelector('.region-btn.active').scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
+
+    function changeContentTab(tab) {
+        activeContentTab = tab;
+        updateView();
+    }
+
     loadSavedData();
     updateView();
 </script>
