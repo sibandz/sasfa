@@ -552,7 +552,7 @@
         <img src="images/sasfa_logo-removebg-preview.png" alt="SASFA Logo" class="footer-logo"><br>
         <strong>Halala Cup Regional Rules:</strong><br>
         2 x 30 min halves | 10 min break<br>
-        Points: Win (2), Draw (1), Loss (0)<br>
+        Points: Win (3), Draw (1), Loss (0)<br>
         Top 2 teams per region qualify for National Finals.
         <div class="footer-admin-link">
             <a href="edit.html">Manager Login</a>
@@ -867,8 +867,8 @@
                 team1.gd += score1 - score2;
                 team2.gd += score2 - score1;
 
-                if (score1 > score2) { team1.points += 2; } // Team 1 wins
-                else if (score2 > score1) { team2.points += 2; } // Team 2 wins
+                if (score1 > score2) { team1.points += 3; } // Team 1 wins
+                else if (score2 > score1) { team2.points += 3; } // Team 2 wins
                 else { team1.points += 1; team2.points += 1; } // Draw
             }
         });
