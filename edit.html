@@ -482,23 +482,39 @@
     const loginForm = document.getElementById('loginForm');
     const saveButton = document.getElementById('saveButton');
 
-    function loadSavedData() {
+    async function loadSavedData() {
         try {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (!stored) return;
-            const saved = JSON.parse(stored);
+            // Fetch data from a central server instead of localStorage
+            const response = await fetch('/api/get-data'); // A hypothetical API endpoint
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const saved = await response.json();
+            
+            // Merge fetched data with default data structure
             Object.keys(saved).forEach(region => {
                 if (tournamentData[region]) {
                     tournamentData[region] = saved[region];
                 }
             });
         } catch (err) {
-            console.warn('Unable to load saved tournament data', err);
+            console.error('Unable to load tournament data from server. Using default data.', err);
+            // Fallback to default data if server is unavailable
         }
     }
 
-    function saveData() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(tournamentData));
+    async function saveData() {
+        try {
+            const response = await fetch('/api/save-data', { // A hypothetical API endpoint
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(tournamentData),
+            });
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        } catch (error) {
+            console.error('Error saving data to server:', error);
+            throw error; // Re-throw to be caught by handleSave
+        }
     }
 
     /**
@@ -622,35 +638,40 @@
         }
     }
 
-    function handleSave() {
-        const match = tournamentData[activeRegion].matches[activeMatchIndex];
-        match.st = editStatus.value;
-        match.t = editTime.value.trim() || match.t;
-        match.s1 = Number(editScore1.value || 0);
-        match.s2 = Number(editScore2.value || 0);
-        match.t1 = editTeam1.value.trim() || match.t1;
-        match.t2 = editTeam2.value.trim() || match.t2;
+    async function handleSave() {
+        try {
+            const match = tournamentData[activeRegion].matches[activeMatchIndex];
+            match.st = editStatus.value;
+            match.t = editTime.value.trim() || match.t;
+            match.s1 = Number(editScore1.value || 0);
+            match.s2 = Number(editScore2.value || 0);
+            match.t1 = editTeam1.value.trim() || match.t1;
+            match.t2 = editTeam2.value.trim() || match.t2;
 
-        // Recalculate official standings for the entire region before saving
-        calculateStandings(tournamentData[activeRegion]);
+            // Recalculate official standings for the entire region before saving
+            calculateStandings(tournamentData[activeRegion]);
 
-        saveData();
-        populateMatchOptions();
-        setSaveStatus('Saved successfully. Refresh public page to view updates.');
+            await saveData();
+            populateMatchOptions(); // Repopulate to reflect any potential name changes
+            setSaveStatus('Saved to server successfully. Refresh public page.');
+        } catch (error) {
+            setSaveStatus('Error saving to server!', false);
+        }
     }
 
     loginForm.addEventListener('submit', handleLogin);
     saveButton.addEventListener('click', handleSave);
     regionSelect.addEventListener('change', changeRegion);
     matchSelect.addEventListener('change', changeMatch);
-
-    loadSavedData();
-    if (sessionStorage.getItem(AUTH_FLAG) === 'true') {
-        showEditor();
-    } else {
-        showLogin();
-    }
-    populateRegionOptions();
+    (async () => {
+        await loadSavedData();
+        if (sessionStorage.getItem(AUTH_FLAG) === 'true') {
+            showEditor();
+        } else {
+            showLogin();
+        }
+        populateRegionOptions();
+    })();
 </script>
 
 </body>

@@ -811,23 +811,22 @@
     const contentTabs = ['Upcoming', 'Live', 'Finished']; // Standings is no longer a tab
     const STORAGE_KEY = 'halala-cup-data';
 
-    function loadSavedData() {
+    async function loadSavedData() {
         try {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (!stored) return;
-            const saved = JSON.parse(stored);
+            // Fetch data from a central server instead of localStorage
+            const response = await fetch('/api/get-data'); // A hypothetical API endpoint
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const saved = await response.json();
             Object.keys(saved).forEach(region => {
                 if (DEFAULT_TOURNAMENT_DATA[region]) {
                     tournamentData[region] = saved[region]; // Load into our working copy
                 }
             });
         } catch (err) {
-            console.warn('Unable to load saved tournament data', err);
+            console.warn('Unable to load saved tournament data from server. Using default data.', err);
         }
-    }
-
-    function saveData() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_TOURNAMENT_DATA));
     }
 
     /**
@@ -964,10 +963,12 @@
         updateView();
     }
 
-    // Load initial data from localStorage, overriding defaults
-    loadSavedData();
-    // Initial render
-    updateView();
+    // Load initial data from server, overriding defaults
+    (async () => {
+        await loadSavedData();
+        // Initial render
+        updateView();
+    })();
 
     // --- THEME SWITCHER LOGIC ---
     const themeToggle = document.getElementById('theme-toggle');
