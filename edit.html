@@ -555,8 +555,8 @@
                 team1.gd += score1 - score2;
                 team2.gd += score2 - score1;
 
-                if (score1 > score2) { team1.points += 2; }
-                else if (score2 > score1) { team2.points += 2; }
+                if (score1 > score2) { team1.points += 3; } // Corrected: 3 points for a win
+                else if (score2 > score1) { team2.points += 3; } // Corrected: 3 points for a win
                 else { team1.points += 1; team2.points += 1; }
             }
         });
