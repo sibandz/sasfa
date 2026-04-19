@@ -17,11 +17,19 @@ app.use(express.static(__dirname)); // Serves files like index.html, edit.html, 
 app.get('/api/get-data', async (req, res) => {
     try {
         const data = await fs.readFile(DATA_FILE, 'utf8');
+        // If the file is empty, it's not valid JSON. Return an empty object.
+        if (!data) {
+            return res.json({});
+        }
         res.json(JSON.parse(data));
     } catch (error) {
+        // If the file doesn't exist, it's not an error.
+        // It just means no data has been saved yet. Send an empty object.
+        if (error.code === 'ENOENT') {
+            return res.json({});
+        }
         console.error('Error reading data file:', error);
-        // If the file doesn't exist or there's an error, send a 500 status.
-        // The frontend will fall back to its default data if this happens.
+        // For other errors (e.g., parsing malformed JSON), send a 500.
         res.status(500).json({ message: 'Error retrieving data.' });
     }
 });
