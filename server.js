@@ -11,6 +11,8 @@ app.use(express.static(__dirname));
 
 /**
  * FIXED: Added check to see if file exists before reading
+ * Reads tournament data from the JSON file.
+ * If the file doesn't exist or is empty, returns an empty object.
  */
 app.get('/api/get-data', async (req, res) => {
     try {
@@ -35,10 +37,7 @@ app.get('/api/get-data', async (req, res) => {
             return res.json({});
         }
         console.error('Error reading data file:', error);
-<<<<<<< HEAD
         // For other errors (e.g., parsing malformed JSON), send a 500.
-=======
->>>>>>> 706f294b8d681b5353b74a2b9d621c4bcb6b4377
         res.status(500).json({ message: 'Error retrieving data.' });
     }
 });
