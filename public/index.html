@@ -201,7 +201,7 @@
 
         /* --- MAIN CONTAINER --- */
         .main-container {
-            max-width: 1100px; /* Wider for desktop */
+            max-width: 1400px; /* Wider for desktop */
             margin: 0 auto;
             padding: 24px 16px 60px;
         }
@@ -209,8 +209,8 @@
         /* NEW: Grid Layout for Desktop */
         .content-grid {
             display: grid;
-            grid-template-columns: 340px 1fr 320px;
-            gap: 30px;
+            grid-template-columns: 340px 1fr 340px;
+            gap: 48px;
             align-items: start;
         }
 
@@ -225,8 +225,8 @@
 
         @media (max-width: 1240px) {
             .content-grid {
-                grid-template-columns: 1fr 320px;
-                gap: 24px;
+                grid-template-columns: 1fr 340px;
+                gap: 32px;
             }
             .social-column {
                 display: none; /* Hide social on medium screens for space */
@@ -252,35 +252,37 @@
         
         /* --- LEAGUE SECTION --- */
         .league-section {
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             background: var(--card-bg);
             border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--frosted-border);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         }
 
 
         .league-header {
-            padding: 12px 16px;
-            background: var(--bg);
+            padding: 14px 16px;
+            background: linear-gradient(135deg, rgba(160, 214, 29, 0.1), rgba(29, 38, 51, 0.05));
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             cursor: pointer;
             user-select: none;
         }
 
         .league-header:hover {
-            background: rgba(0, 0, 0, 0.02);
+            background: linear-gradient(135deg, rgba(160, 214, 29, 0.15), rgba(29, 38, 51, 0.08));
         }
 
         .league-flag {
-            font-size: 1.4rem;
-            width: 28px;
+            font-size: 1.6rem;
+            width: 32px;
             text-align: center;
+            flex-shrink: 0;
         }
 
         .league-info {
@@ -288,9 +290,10 @@
         }
 
         .league-name {
-            font-weight: 700;
-            font-size: 0.95rem;
+            font-weight: 800;
+            font-size: 0.97rem;
             color: var(--text-main);
+            letter-spacing: 0.3px;
         }
 
         .league-country {
@@ -299,9 +302,10 @@
         }
 
         .league-toggle {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--text-muted);
             transition: transform 0.2s;
+            flex-shrink: 0;
         }
 
         .league-section.collapsed .league-toggle {
@@ -467,11 +471,11 @@
 
         /* --- MATCH ITEM --- */
         .match-item {
-            padding: 12px 16px;
+            padding: 14px 16px;
             border-top: 1px solid var(--border);
             display: grid;
-            grid-template-columns: 50px 1fr auto;
-            gap: 12px;
+            grid-template-columns: 55px 1fr auto;
+            gap: 14px;
             align-items: center;
             transition: background-color 0.2s;
         }
@@ -481,37 +485,40 @@
         }
 
         .match-time {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--navy);
             text-align: center;
-            line-height: 1.2;
+            line-height: 1.3;
+            letter-spacing: 0.5px;
         }
 
         .match-teams {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
 
         .match-team {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            font-weight: 500;
+            gap: 10px;
+            font-size: 0.92rem;
+            font-weight: 600;
             color: var(--text-main);
         }
 
         .team-crest {
-            width: 24px;
-            height: 24px;
-            background: var(--border);
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--lime), var(--navy));
             border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.7rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--white);
             flex-shrink: 0;
         }
 
@@ -519,22 +526,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
-            min-width: 30px;
-            text-align: right;
+            gap: 8px;
+            min-width: 40px;
+            text-align: center;
         }
 
         .score-value {
-            font-weight: 800;
-            font-size: 1.1rem;
-            color: var(--text-main);
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: var(--navy);
         }
 
         .score-status {
-            font-size: 0.7rem;
-            font-weight: 700;
+            font-size: 0.65rem;
+            font-weight: 800;
             color: var(--text-muted);
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .score-status.live {
@@ -606,14 +614,32 @@
             }
 
             .match-item {
-                padding: 10px 12px;
-                grid-template-columns: 45px 1fr auto;
-                gap: 8px;
+                padding: 12px 14px;
+                grid-template-columns: 48px 1fr auto;
+                gap: 10px;
             }
 
             .match-team {
-                font-size: 0.8rem;
-                gap: 6px;
+                font-size: 0.85rem;
+                gap: 8px;
+            }
+
+            .team-crest {
+                width: 24px;
+                height: 24px;
+                font-size: 0.7rem;
+            }
+
+            .match-time {
+                font-size: 0.7rem;
+            }
+
+            .match-score {
+                min-width: 36px;
+            }
+
+            .score-value {
+                font-size: 1.1rem;
             }
         }
     </style>
