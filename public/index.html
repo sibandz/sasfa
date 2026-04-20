@@ -1234,7 +1234,11 @@ statusFilters.addEventListener('click', e => {
 regionFilters.addEventListener('click', e => {
     if (e.target.matches('.filter-btn')) {
         activeRegion = e.target.dataset.region;
-        renderQualifying();
+        if (activeMainTab === 'qualifying') {
+            renderQualifying();
+        } else if (activeMainTab === 'playoffs') {
+            renderPlayoffs();
+        }
     }
 });
 
