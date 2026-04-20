@@ -1,5 +1,5 @@
-const BIN_ID = 'YOUR_JSONBIN_BIN_ID'; // Replace with your JSONBin bin ID
-const API_KEY = 'YOUR_JSONBIN_API_KEY'; // Replace with your JSONBin API key
+const BIN_ID = process.env.JSONBIN_BIN_ID;
+const API_KEY = process.env.JSONBIN_API_KEY;
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
