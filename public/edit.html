@@ -29,6 +29,12 @@
             position: sticky;
             top: 0;
             z-index: 10;
+            width: 100%;
+        }
+        @media (max-width: 768px) {
+            header {
+                padding: 20px 12px;
+            }
         }
         .header-top {
             display: flex;
@@ -36,8 +42,21 @@
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
+            width: 100%;
         }
         .logo-container { display: flex; align-items: center; gap: 15px; }
+        @media (max-width: 768px) {
+            .header-top {
+                gap: 8px;
+            }
+            .logo-area {
+                font-size: 1rem;
+            }
+            .watch-live-btn {
+                padding: 10px 12px;
+                font-size: 0.85rem;
+            }
+        }
         .sasfa-logo { height: 30px; width: auto; }
         .logo-area { 
             font-size: 1.2rem;
@@ -63,7 +82,18 @@
         .page-title { padding: 24px 16px 0; }
         .page-title h1 { margin: 0; font-size: 2rem; }
         .page-title p { margin: 8px 0 0; color: var(--text-muted); }
-        .main-container { max-width: 980px; margin: 0 auto; padding: 20px 16px 40px; }
+        .main-container { max-width: 980px; margin: 0 auto; padding: 20px 16px 40px; width: 100%; }
+        @media (max-width: 768px) {
+            .page-title {
+                padding: 20px 12px 0;
+            }
+            .page-title h1 {
+                font-size: 1.5rem;
+            }
+            .main-container {
+                padding: 16px 12px 40px;
+            }
+        }
         .page-card {
             background: var(--white);
             border: 1px solid var(--card-border);
@@ -120,6 +150,19 @@
             line-height: 1.6;
         }
         .small-copy { font-size: 0.85rem; color: var(--text-muted); }
+        footer {
+            padding: 30px 16px;
+            background: var(--white);
+            border-top: 1px solid #e4e9f2;
+            text-align: center;
+            margin-top: 40px;
+            width: 100%;
+        }
+        @media (max-width: 768px) {
+            footer {
+                padding: 24px 12px;
+            }
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -344,7 +387,7 @@
         "Free State": {
             pools: {
                 "Pool A": [
-                    {name: "Saint Annes Technical High School", seed: 1},
+                    {name: "Saint Annes Technical", seed: 1},
                     {name: "Brebner High School", seed: 4},
                     {name: "Moroka High School", seed: 5},
                     {name: "Bloemfontein High School", seed: 8}
@@ -358,14 +401,14 @@
             },
             matches: [
                 { d: "Friday 17 April", t: "11:00", t1: "Brebner High School", t2: "Bloemfontein High School", s1: 0, s2: 0, st: "UPCOMING" },
-                { d: "Friday 17 April", t: "12:30", t1: "Saint Annes Technical High School", t2: "Moroka High School", s1: 0, s2: 0, st: "UPCOMING" },
+                { d: "Friday 17 April", t: "12:30", t1: "Saint Annes Technical", t2: "Moroka High School", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Friday 17 April", t: "14:00", t1: "HTS Louis Botha", t2: "Curro Bloemfontein", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Friday 17 April", t: "15:30", t1: "Virginia High School", t2: "Hodisa Secondary School", s1: 0, s2: 0, st: "UPCOMING" },
-                { d: "Saturday 18 April", t: "11:00", t1: "Saint Annes Technical High School", t2: "Brebner High School", s1: 0, s2: 0, st: "UPCOMING" },
+                { d: "Saturday 18 April", t: "11:00", t1: "Saint Annes Technical", t2: "Brebner High School", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Saturday 18 April", t: "12:30", t1: "Moroka High School", t2: "Bloemfontein High School", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Saturday 18 April", t: "14:00", t1: "Virginia High School", t2: "HTS Louis Botha", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Saturday 18 April", t: "15:30", t1: "Hodisa Secondary School", t2: "Curro Bloemfontein", s1: 0, s2: 0, st: "UPCOMING" },
-                { d: "Sunday 19 April", t: "09:00", t1: "Saint Annes Technical High School", t2: "Bloemfontein High School", s1: 0, s2: 0, st: "UPCOMING" },
+                { d: "Sunday 19 April", t: "09:00", t1: "Saint Annes Technical", t2: "Bloemfontein High School", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "10:30", t1: "Brebner High School", t2: "Moroka High School", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "12:00", t1: "Virginia High School", t2: "Curro Bloemfontein", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "13:30", t1: "HTS Louis Botha", t2: "Hodisa Secondary School", s1: 0, s2: 0, st: "UPCOMING" }
