@@ -844,7 +844,7 @@ function renderStandings(pools, title) {
             <div class="standings-card">
                 <div class="standings-title">${poolName}</div>
                 <table>
-                    <thead><tr><th>Team</th><th class="col-data">GD</th><th class="col-data">Pts</th></tr></thead>
+                    <thead><tr><th>Team</th><th class="col-data">P</th><th class="col-data">GD</th><th class="col-data">Pts</th></tr></thead>
                     <tbody>
                         ${teams.sort((a, b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name)).map((team, index) => {
                             const isQualified = index < 2;
@@ -853,6 +853,7 @@ function renderStandings(pools, title) {
                             return `
                                 <tr class="${qualifiedClass}">
                                     <td class="col-team">${team.name}<span class="team-seed">(#${team.seed})</span> ${qualifiedMarker}</td>
+                                    <td class="col-data">${team.played}</td>
                                     <td class="col-data">${team.gd}</td>
                                     <td class="col-data"><span class="col-pts">${team.points}</span></td>
                                 </tr>`;
@@ -865,12 +866,15 @@ function renderStandings(pools, title) {
 }
 
 function calculateStandings(pools, matches, statusesToInclude = ['FINAL']) {
-    for (const poolName in pools) { pools[poolName].forEach(team => { team.points = 0; team.gd = 0; }); }
+    for (const poolName in pools) { pools[poolName].forEach(team => { team.points = 0; team.gd = 0; team.played = 0; }); }
     const allTeams = {};
     for (const poolName in pools) { pools[poolName].forEach(team => { allTeams[team.name] = team; }); }
     matches.filter(m => statusesToInclude.includes(m.st)).forEach(match => {
         const t1 = allTeams[match.t1], t2 = allTeams[match.t2];
         if (t1 && t2) {
+            t1.played += 1;
+            t2.played += 1;
+
             t1.gd += match.s1 - match.s2;
             t2.gd += match.s2 - match.s1;
             if (match.s1 > match.s2) t1.points += 3;
