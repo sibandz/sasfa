@@ -1,7 +1,5 @@
-const fs = require('fs').promises;
-const path = require('path');
-
-const DATA_FILE = path.join(process.cwd(), 'tournament-data.json');
+const BIN_ID = 'YOUR_JSONBIN_BIN_ID'; // Replace with your JSONBin bin ID
+const API_KEY = 'YOUR_JSONBIN_API_KEY'; // Replace with your JSONBin API key
 
 export default async function handler(req, res) {
     if (req.method !== 'GET') {
@@ -9,23 +7,18 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Check if the file exists first
-        try {
-            await fs.access(DATA_FILE);
-        } catch {
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+            headers: {
+                'X-Master-Key': API_KEY,
+            },
+        });
+        if (!response.ok) {
             return res.json({});
         }
-
-        const data = await fs.readFile(DATA_FILE, 'utf8');
-        if (!data) {
-            return res.json({});
-        }
-        res.json(JSON.parse(data));
+        const data = await response.json();
+        res.json(data.record || {});
     } catch (error) {
-        if (error.code === 'ENOENT') {
-            return res.json({});
-        }
-        console.error('Error reading data file:', error);
-        res.status(500).json({ message: 'Error retrieving data.' });
+        console.error('Error fetching data:', error);
+        res.json({});
     }
 }
