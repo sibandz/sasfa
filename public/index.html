@@ -990,7 +990,7 @@ async function loadData() {
 function updateView() {
     mainTabs.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === activeMainTab));
     Object.entries(mainContentPanes).forEach(([key, pane]) => pane.style.display = (key === activeMainTab) ? 'block' : 'none');
-    regionFilters.style.display = (activeMainTab === 'qualifying') ? 'flex' : 'none';
+    regionFilters.style.display = ['qualifying', 'playoffs'].includes(activeMainTab) ? 'flex' : 'none';
     statusFilters.style.display = ['home', 'qualifying'].includes(activeMainTab) ? 'flex' : 'none';
 
     const showStandings = ['home', 'qualifying'].includes(activeMainTab);
@@ -1012,7 +1012,7 @@ function renderHome() {
     const allMatches = Object.values(tournamentData).flatMap(region => region.matches || []);
     const finishedMatches = allMatches.filter(m => m.st === 'FINAL').map(m => ({ ...m, gd: Math.abs(m.s1 - m.s2) })).sort((a, b) => b.gd - a.gd).slice(0, 4);
     if (finishedMatches.length > 0) {
-        matchesHtml += '<div class="section-title">Top Results</div>';
+        matchesHtml += '<div class="section-title">Top Results (Qualifying)</div>';
         finishedMatches.forEach(match => { matchesHtml += renderMatch(match); });
     }
 
@@ -1066,6 +1066,8 @@ function renderQualifying() {
 }
 
 function renderPlayoffs() {
+    regionFilters.innerHTML = Object.keys(tournamentData).map(region => `<button class="filter-btn ${region === activeRegion ? 'active' : ''}" data-region="${region}">${region}</button>`).join('');
+
     let html = '';
     const playoffSchedule = [
         { round: "Playoff round 1", time: "09:00", matchNum: 13, t1_key: "1st Pool A", t2_key: "2nd Pool B" },
@@ -1074,14 +1076,19 @@ function renderPlayoffs() {
         { round: "Playoff round 4", time: "15:30", matchNum: 16, t1_key: "Winner M13", t2_key: "Winner M14", description: "(1st and 2nd)" }
     ];
 
-    for (const [regionName, regionData] of Object.entries(tournamentData)) {
-        html += `<div class="section-title">${regionName} Playoffs</div>`;
+    const regionName = activeRegion;
+    const regionData = tournamentData[regionName];
 
-        if (!regionData.pools || !regionData.pools['Pool A'] || !regionData.pools['Pool B']) {
-            html += '<div class="placeholder-text" style="margin-bottom: 16px;">Playoff data not available for this region.</div>';
-            continue;
-        }
+    if (!regionData) {
+        playoffsContent.innerHTML = '<div class="placeholder-text">Select a region to view playoffs.</div>';
+        return;
+    }
 
+    html += `<div class="section-title">${regionName} Playoffs</div>`;
+
+    if (!regionData.pools || !regionData.pools['Pool A'] || !regionData.pools['Pool B']) {
+        html += '<div class="placeholder-text" style="margin-bottom: 16px;">Playoff data not available for this region.</div>';
+    } else {
         // Calculate standings based on FINAL results only to determine playoff spots
         const poolsForDisplay = JSON.parse(JSON.stringify(regionData.pools));
         calculateStandings(poolsForDisplay, regionData.matches, ['FINAL']);
