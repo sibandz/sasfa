@@ -640,7 +640,7 @@
 <!-- Status filters -->
 <div class="filters" id="statusFilters">
     <button class="filter-btn live active" data-filter="live" style="display: none;">LIVE (0)</button>
-    <button class="filter-btn" data-filter="finished">Finished</button>
+    <button class="filter-btn" data-filter="finished">Results</button>
     <button class="filter-btn" data-filter="upcoming">Upcoming</button>
 </div>
 
@@ -1054,11 +1054,13 @@ function renderQualifying() {
     let matchesHtml = '';
     const statusMap = { finished: 'FINAL', upcoming: 'UPCOMING', live: 'LIVE' };
     const filteredMatches = regionData.matches.filter(m => m.st === statusMap[activeStatusFilter]);
-    matchesHtml += `<div class="section-title">${activeStatusFilter.charAt(0).toUpperCase() + activeStatusFilter.slice(1)} Matches</div>`;
+    const title = activeStatusFilter === 'finished' ? 'Results' : `${activeStatusFilter.charAt(0).toUpperCase() + activeStatusFilter.slice(1)} Matches`;
+    matchesHtml += `<div class="section-title">${title}</div>`;
     if (filteredMatches.length > 0) {
         filteredMatches.forEach(match => { matchesHtml += renderMatch(match); });
     } else {
-        matchesHtml += `<div class="placeholder-text" style="margin-top: 16px;">No ${activeStatusFilter} matches for this region.</div>`;
+        const emptyMessage = activeStatusFilter === 'finished' ? 'results' : `${activeStatusFilter} matches`;
+        matchesHtml += `<div class="placeholder-text" style="margin-top: 16px;">No ${emptyMessage} for this region.</div>`;
     }
     qualifyingContent.innerHTML = matchesHtml;
 }
