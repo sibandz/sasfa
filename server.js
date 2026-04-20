@@ -61,3 +61,5 @@ app.post('/api/save-data', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+module.exports = app;
