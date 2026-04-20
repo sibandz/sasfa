@@ -15,6 +15,8 @@
             --bg: #f5f7f9;
             --white: #ffffff;
             --live: #ff4d4d;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --frosted-border: rgba(0, 0, 0, 0.05);
         }
 
         body[data-theme="dark"] {
@@ -24,6 +26,8 @@
             --bg: #0a1929;
             --navy: #e6f1ff;
             --navy-light: #8892b0;
+            --card-bg: rgba(22, 43, 66, 0.8);
+            --frosted-border: rgba(136, 146, 176, 0.2);
         }
 
         * {
@@ -34,9 +38,23 @@
         }
 
         body {
+            background-image:
+                linear-gradient(to bottom, rgba(245, 247, 249, 0.9), rgba(245, 247, 249, 0.98)),
+                url('https://scontent-jnb2-1.xx.fbcdn.net/v/t39.30808-6/530475141_1157717453051195_3936214339797063509_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=110&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeGzhsG_k0Xc1DWx5jS34lCJ0m58myK1f6TSbnybIrV_pMN2LXgIP0fqMNjl1d1jQ6T0LoFTKcAr9i3GWxsN4Qi3&_nc_ohc=4oYI-0aGzKIQ7kNvwECs2Ki&_nc_oc=Adq3nnZDexAUSuT2oWIIEtUMpKxHk_vbtwujbdOm1K8mVESh1icEJr9AnJPI2fwohZ0&_nc_zt=23&_nc_ht=scontent-jnb2-1.xx&_nc_gid=PmKnrIyZFLiygiutYbiAww&_nc_ss=7a3a8&oh=00_Af0Ax2Gq8SB3q2bsIborJeuATzjcReiAtkQWYg3a5Gpexg&oe=69E5B58E');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             background-color: var(--bg);
             color: var(--text-main);
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, color 0.3s;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body[data-theme="dark"] {
+            background-image:
+                linear-gradient(to bottom, rgba(10, 25, 41, 0.9), rgba(8, 22, 38, 0.98)),
+                url('https://scontent-jnb2-1.xx.fbcdn.net/v/t39.30808-6/530475141_1157717453051195_3936214339797063509_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=110&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeGzhsG_k0Xc1DWx5jS34lCJ0m58myK1f6TSbnybIrV_pMN2LXgIP0fqMNjl1d1jQ6T0LoFTKcAr9i3GWxsN4Qi3&_nc_ohc=4oYI-0aGzKIQ7kNvwECs2Ki&_nc_oc=Adq3nnZDexAUSuT2oWIIEtUMpKxHk_vbtwujbdOm1K8mVESh1icEJr9AnJPI2fwohZ0&_nc_zt=23&_nc_ht=scontent-jnb2-1.xx&_nc_gid=PmKnrIyZFLiygiutYbiAww&_nc_ss=7a3a8&oh=00_Af0Ax2Gq8SB3q2bsIborJeuATzjcReiAtkQWYg3a5Gpexg&oe=69E5B58E');
         }
 
         /* --- HEADER --- */
@@ -92,6 +110,15 @@
         .theme-btn .sun-icon { display: none; }
         body[data-theme="dark"] .theme-btn .moon-icon { display: none; }
         body[data-theme="dark"] .theme-btn .sun-icon { display: block; }
+
+        body.is-loading .theme-btn {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
         /* --- TAB NAVIGATION --- */
         .tabs {
@@ -180,11 +207,14 @@
         /* --- LEAGUE SECTION --- */
         .league-section {
             margin-bottom: 16px;
-            background: var(--white);
+            background: var(--card-bg);
             border-radius: 12px;
             overflow: hidden;
-            border: 1px solid var(--border);
+            border: 1px solid var(--frosted-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
+
 
         .league-header {
             padding: 12px 16px;
@@ -243,8 +273,10 @@
         }
 
         .standings-card {
-            background: var(--white);
-            border: 1px solid var(--border);
+            background: var(--card-bg);
+            border: 1px solid var(--frosted-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-radius: 12px;
             padding: 15px;
             margin-bottom: 16px;
@@ -294,13 +326,39 @@
             min-width: 20px;
         }
         .placeholder-text {
-            padding: 40px 20px; text-align: center; color: var(--text-muted); background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+            padding: 40px 20px; text-align: center; color: var(--text-muted); background: var(--card-bg); border: 1px solid var(--frosted-border); border-radius: 12px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .qualified-marker {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--lime);
+            color: var(--navy);
+            font-weight: 800;
+            font-size: 0.7rem;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        tr.qualified td {
+            background-color: rgba(160, 214, 29, 0.1);
+        }
+        tr.qualified td:first-child {
+            border-left: 3px solid var(--lime);
+            padding-left: 5px; /* 8px default - 3px border */
+        }
+        body[data-theme="dark"] tr.qualified td {
+            background-color: rgba(160, 214, 29, 0.15);
         }
 
         /* --- SOCIAL SECTION --- */
         .social-section {
-            background: var(--white);
-            border: 1px solid var(--border);
+            background: var(--card-bg);
+            border: 1px solid var(--frosted-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 16px;
@@ -527,7 +585,7 @@
 
 <!-- Status filters -->
 <div class="filters" id="statusFilters">
-    <button class="filter-btn live active" data-filter="live">LIVE (0)</button>
+    <button class="filter-btn live active" data-filter="live" style="display: none;">LIVE (0)</button>
     <button class="filter-btn" data-filter="finished">Finished</button>
     <button class="filter-btn" data-filter="upcoming">Upcoming</button>
 </div>
@@ -548,6 +606,7 @@
     <div class="footer-link">
         <a href="edit.html">Manager Login</a>
     </div>
+    <div id="lastUpdated" style="margin-top: 15px; font-size: 0.8rem; opacity: 0.7;"></div>
 </footer>
 
 <script>
@@ -555,6 +614,7 @@ let tournamentData = {};
 let activeMainTab = 'home';
 let activeRegion = null;
 let activeStatusFilter = 'live';
+let isInitialLoad = true;
 
 // --- DOM ELEMENTS ---
 const mainTabs = document.getElementById('mainTabs');
@@ -578,6 +638,8 @@ document.body.setAttribute('data-theme', savedTheme);
 
 // --- DATA LOADING ---
 async function loadData() {
+    document.body.classList.add('is-loading');
+    const lastUpdatedEl = document.getElementById('lastUpdated');
     try {
         const response = await fetch('/api/get-data');
         tournamentData = await response.json();
@@ -585,9 +647,17 @@ async function loadData() {
             activeRegion = Object.keys(tournamentData)[0];
         }
         updateView();
+        if (lastUpdatedEl) lastUpdatedEl.textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+        isInitialLoad = false; // Mark initial load as complete
     } catch (error) {
         console.error('Error loading data:', error);
-        homeContent.innerHTML = '<div class="placeholder-text">Could not load tournament data.</div>';
+        if (lastUpdatedEl) lastUpdatedEl.textContent = `Failed to update. Retrying automatically...`;
+        // Only show the main error on the very first load.
+        if (isInitialLoad) {
+            homeContent.innerHTML = '<div class="placeholder-text">Could not load tournament data.</div>';
+        }
+    } finally {
+        document.body.classList.remove('is-loading');
     }
 }
 
@@ -704,12 +774,87 @@ function renderStandings(pools, title) {
                 <table>
                     <thead><tr><th>Team</th><th class="col-data">GD</th><th class="col-data">Pts</th></tr></thead>
                     <tbody>
-                        ${teams.sort((a, b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name)).map(team => `
-                            <tr>
-                                <td class="col-team">${team.name}<span class="team-seed">(#${team.seed})</span></td>
-                                <td class="col-data">${team.gd}</td>
-                                <td class="col-data"><span class="col-pts">${team.points}</span></td>
-                            </tr>`).join('')}
+                        ${teams.sort((a, b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name)).map((team, index) => {
+                            const isQualified = index < 2;
+                            const qualifiedClass = isQualified ? 'qualified' : '';
+                            const qualifiedMarker = isQualified ? '<span class="qualified-marker">Q</span>' : '';
+                            return `
+                                <tr class="${qualifiedClass}">
+                                    <td class="col-team">${team.name}<span class="team-seed">(#${team.seed})</span> ${qualifiedMarker}</td>
+                                    <td class="col-data">${team.gd}</td>
+                                    <td class="col-data"><span class="col-pts">${team.points}</span></td>
+                                </tr>`;
+                        }).join('')}
+                    </tbody>
+                </table>
+            </div>`;
+    }
+    return html;
+}
+
+function calculateStandings(pools, matches, statusesToInclude = ['FINAL']) {
+    for (const poolName in pools) { pools[poolName].forEach(team => { team.points = 0; team.gd = 0; }); }
+    const allTeams = {};
+    for (const poolName in pools) { pools[poolName].forEach(team => { allTeams[team.name] = team; }); }
+    matches.filter(m => statusesToInclude.includes(m.st)).forEach(match => {
+        const t1 = allTeams[match.t1], t2 = allTeams[match.t2];
+        if (t1 && t2) {
+            t1.gd += match.s1 - match.s2;
+            t2.gd += match.s2 - match.s1;
+            if (match.s1 > match.s2) t1.points += 3;
+            else if (match.s2 > match.s1) t2.points += 3;
+            else { t1.points += 1; t2.points += 1; }
+        }
+    });
+}
+
+function updateLiveCount() {
+    const liveCount = Object.values(tournamentData).flatMap(r => r.matches || []).filter(m => m.st === 'LIVE').length;
+    const liveBtn = statusFilters.querySelector('[data-filter="live"]');
+    if (liveBtn) liveBtn.textContent = `LIVE (${liveCount})`;
+}
+
+// --- EVENT LISTENERS ---
+mainTabs.addEventListener('click', e => {
+    if (e.target.matches('.tab-btn')) {
+        activeMainTab = e.target.dataset.tab;
+        updateView();
+    }
+});
+
+statusFilters.addEventListener('click', e => {
+    if (e.target.matches('.filter-btn')) {
+        activeStatusFilter = e.target.dataset.filter;
+        statusFilters.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        e.target.classList.add('active');
+        if (activeMainTab === 'home') renderHome(); else renderQualifying();
+    }
+});
+
+regionFilters.addEventListener('click', e => {
+    if (e.target.matches('.filter-btn')) {
+        activeRegion = e.target.dataset.region;
+        renderQualifying();
+    }
+});
+
+// --- INITIALIZATION ---
+loadData(); // Initial load
+setInterval(loadData, 60000); // Refresh every 60 seconds
+</script>
+
+</body>
+</html>
+                            const isQualified = index < 2;
+                            const qualifiedClass = isQualified ? 'qualified' : '';
+                            const qualifiedMarker = isQualified ? '<span class="qualified-marker">Q</span>' : '';
+                            return `
+                                <tr class="${qualifiedClass}">
+                                    <td class="col-team">${team.name}<span class="team-seed">(#${team.seed})</span> ${qualifiedMarker}</td>
+                                    <td class="col-data">${team.gd}</td>
+                                    <td class="col-data"><span class="col-pts">${team.points}</span></td>
+                                </tr>`;
+                        }).join('')}
                     </tbody>
                 </table>
             </div>`;
