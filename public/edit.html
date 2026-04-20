@@ -50,16 +50,16 @@
                 gap: 8px;
             }
             .logo-area {
-                font-size: 1rem;
+                font-size: 0.8rem;
             }
             .watch-live-btn {
                 padding: 10px 12px;
-                font-size: 0.85rem;
+                font-size: 0.68rem;
             }
         }
-        .sasfa-logo { height: 30px; width: auto; }
+        .sasfa-logo { height: 28px; width: auto; }
         .logo-area { 
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 800;
             letter-spacing: 0.1em;
         }
@@ -75,20 +75,24 @@
             padding: 12px 16px;
             border-radius: 999px;
             font-weight: 700;
+            font-size: 0.9rem;
             transition: background 0.2s;
         }
         .watch-live-btn svg { width: 16px; height: 16px; fill: var(--navy); }
         .watch-live-btn:hover { background: #dbe9ff; }
         .page-title { padding: 24px 16px 0; }
-        .page-title h1 { margin: 0; font-size: 2rem; }
-        .page-title p { margin: 8px 0 0; color: var(--text-muted); }
+        .page-title h1 { margin: 0; font-size: 1.5rem; }
+        .page-title p { margin: 8px 0 0; color: var(--text-muted); font-size: 0.9rem; }
         .main-container { max-width: 980px; margin: 0 auto; padding: 20px 16px 40px; width: 100%; }
         @media (max-width: 768px) {
             .page-title {
                 padding: 20px 12px 0;
             }
             .page-title h1 {
-                font-size: 1.5rem;
+                font-size: 1.04rem;
+            }
+            .page-title p {
+                font-size: 0.72rem;
             }
             .main-container {
                 padding: 16px 12px 40px;
@@ -101,17 +105,27 @@
             padding: 24px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.05);
         }
-        .card-title { margin: 0 0 20px; font-size: 1.25rem; font-weight: 800; }
+        .card-title { margin: 0 0 20px; font-size: 1.1rem; font-weight: 800; }
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
             margin-bottom: 18px;
         }
-        @media (max-width: 720px) { .form-row { grid-template-columns: 1fr; } }
+        @media (max-width: 720px) { 
+            .form-row { grid-template-columns: 1fr; }
+            label { font-size: 0.68rem; }
+            input, select { font-size: 0.72rem; }
+            button { font-size: 0.72rem; }
+            .hint { font-size: 0.68rem; }
+            .status-pill { font-size: 0.64rem; }
+            .card-title { font-size: 0.88rem; }
+            .note-box { font-size: 0.68rem; }
+            .small-copy { font-size: 0.64rem; }
+        }
         label {
             display: block;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             font-weight: 700;
         }
@@ -122,7 +136,7 @@
             border: 1px solid #d8e1ea;
             background: #f8fbff;
             padding: 14px 16px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--text-main);
         }
         button {
@@ -132,13 +146,13 @@
             padding: 14px 18px;
             color: #fff;
             background: var(--navy-med);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 800;
             transition: background 0.2s;
         }
         button:hover { background: #002a56; }
-        .hint { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin-top: 14px; }
-        .status-pill { display: inline-flex; align-items: center; justify-content: center; padding: 8px 14px; border-radius: 999px; background: #eef5ff; color: var(--navy); font-weight: 700; font-size: 0.85rem; }
+        .hint { color: var(--text-muted); font-size: 0.85rem; line-height: 1.6; margin-top: 14px; }
+        .status-pill { display: inline-flex; align-items: center; justify-content: center; padding: 8px 14px; border-radius: 999px; background: #eef5ff; color: var(--navy); font-weight: 700; font-size: 0.8rem; }
         .hidden { display: none; }
         .form-footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; margin-top: 12px; }
         .note-box {
@@ -148,8 +162,9 @@
             background: #f3f7ff;
             color: var(--text-muted);
             line-height: 1.6;
+            font-size: 0.85rem;
         }
-        .small-copy { font-size: 0.85rem; color: var(--text-muted); }
+        .small-copy { font-size: 0.8rem; color: var(--text-muted); }
         footer {
             padding: 30px 16px;
             background: var(--white);
