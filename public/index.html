@@ -1065,7 +1065,73 @@ function renderQualifying() {
     qualifyingContent.innerHTML = matchesHtml;
 }
 
-function renderPlayoffs() { playoffsContent.innerHTML = '<div class="placeholder-text">Playoffs fixtures will be updated at a later stage.</div>'; }
+function renderPlayoffs() {
+    let html = '';
+    const playoffSchedule = [
+        { round: "Playoff round 1", time: "09:00", matchNum: 13, t1_key: "1st Pool A", t2_key: "2nd Pool B" },
+        { round: "Playoff round 2", time: "10:30", matchNum: 14, t1_key: "2nd Pool A", t2_key: "1st Pool B" },
+        { round: "Playoff round 3", time: "14:00", matchNum: 15, t1_key: "Loser M13", t2_key: "Loser M14", description: "(3rd and 4th)" },
+        { round: "Playoff round 4", time: "15:30", matchNum: 16, t1_key: "Winner M13", t2_key: "Winner M14", description: "(1st and 2nd)" }
+    ];
+
+    for (const [regionName, regionData] of Object.entries(tournamentData)) {
+        html += `<div class="section-title">${regionName} Playoffs</div>`;
+
+        if (!regionData.pools || !regionData.pools['Pool A'] || !regionData.pools['Pool B']) {
+            html += '<div class="placeholder-text" style="margin-bottom: 16px;">Playoff data not available for this region.</div>';
+            continue;
+        }
+
+        // Calculate standings based on FINAL results only to determine playoff spots
+        const poolsForDisplay = JSON.parse(JSON.stringify(regionData.pools));
+        calculateStandings(poolsForDisplay, regionData.matches, ['FINAL']);
+
+        const poolA = poolsForDisplay['Pool A'];
+        const poolB = poolsForDisplay['Pool B'];
+
+        // Check if all teams in both pools have played 3 matches
+        const isGroupStageComplete = [...poolA, ...poolB].every(team => team.played >= 3);
+
+        // Sort teams to find 1st and 2nd
+        poolA.sort((a, b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name));
+        poolB.sort((a, b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name));
+
+        const teamMap = {
+            '1st Pool A': isGroupStageComplete ? poolA[0].name : 'TBC',
+            '2nd Pool A': isGroupStageComplete ? poolA[1].name : 'TBC',
+            '1st Pool B': isGroupStageComplete ? poolB[0].name : 'TBC',
+            '2nd Pool B': isGroupStageComplete ? poolB[1].name : 'TBC',
+            'Loser M13': isGroupStageComplete ? 'Loser Match 13' : 'TBC',
+            'Winner M13': isGroupStageComplete ? 'Winner Match 13' : 'TBC',
+            'Loser M14': isGroupStageComplete ? 'Loser Match 14' : 'TBC',
+            'Winner M14': isGroupStageComplete ? 'Winner Match 14' : 'TBC'
+        };
+
+        html += `<div class="league-section">`;
+        playoffSchedule.forEach(match => {
+            const t1 = teamMap[match.t1_key];
+            const t2 = teamMap[match.t2_key];
+            const matchDescription = `${match.round} ${match.description || ''}`;
+
+            html += `
+                <div class="match-item">
+                    <div class="match-time">${match.time}<div style="font-size: 0.7rem; margin-top: 2px;">SAT 23 MAY</div></div>
+                    <div class="match-teams">
+                        <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">${matchDescription}</div>
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            <div class="match-team"><div class="team-crest">${(t1 || '?').charAt(0)}</div><div>${t1}</div></div>
+                            <div class="match-team"><div class="team-crest">${(t2 || '?').charAt(0)}</div><div>${t2}</div></div>
+                        </div>
+                    </div>
+                    <div class="match-score"><div class="score-value">-</div><div class="score-value">-</div></div>
+                </div>
+            `;
+        });
+        html += `</div>`;
+    }
+
+    playoffsContent.innerHTML = html || '<div class="placeholder-text">No regions available for playoffs.</div>';
+}
 function renderFinals() { finalsContent.innerHTML = '<div class="placeholder-text">Finals fixtures will be updated at a later stage.</div>'; }
 
 // --- HELPER FUNCTIONS ---
