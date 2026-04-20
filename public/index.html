@@ -131,6 +131,8 @@
             padding: 0 20px;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .tab-btn {
@@ -164,6 +166,8 @@
             gap: 8px;
             flex-wrap: wrap;
             align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .filter-btn {
@@ -523,7 +527,7 @@
         .team-crest {
             width: 32px;
             height: 32px;
-            background: linear-gradient(135deg, var(--lime), var(--navy));
+            background: var(--navy);
             border-radius: 6px;
             display: flex;
             align-items: center;
@@ -537,16 +541,17 @@
         .match-score {
             grid-column: 2;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
-            gap: 3px;
+            gap: 8px;
             text-align: center;
         }
 
         .score-value {
             font-weight: 900;
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             color: var(--navy);
+            min-width: 24px;
         }
 
         .score-status {
@@ -647,7 +652,7 @@
             }
 
             .score-value {
-                font-size: 1rem;
+                font-size: 1.1rem;
             }
         }
     </style>
@@ -1183,6 +1188,7 @@ function renderFinals() { finalsContent.innerHTML = '<div class="placeholder-tex
 // --- HELPER FUNCTIONS ---
 function renderMatch(match) {
     const status = match.st || 'UPCOMING';
+    const scoreDisplay = `${match.s1 != null ? match.s1 : '-'}:${match.s2 != null ? match.s2 : '-'}`;
     return `
         <div class="league-section"><div class="match-item">
             <div class="match-time">
@@ -1194,8 +1200,7 @@ function renderMatch(match) {
                 <div class="match-team"><div class="team-crest">${(match.t2 || '?').charAt(0)}</div><div>${match.t2 || 'Team 2'}</div></div>
             </div>
             <div class="match-score">
-                <div class="score-value">${match.s1 != null ? match.s1 : '-'}</div>
-                <div class="score-value">${match.s2 != null ? match.s2 : '-'}</div>
+                <div class="score-value">${scoreDisplay}</div>
             </div>
         </div></div>`;
 }
