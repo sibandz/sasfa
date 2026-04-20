@@ -158,23 +158,25 @@
 
         /* --- REGION FILTER BAR --- */
         .filter-bar {
-            background: var(--card-bg-solid);
-            border-bottom: 1px solid var(--card-border);
+            background: rgba(7, 16, 30, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             position: sticky;
             top: 0;
             z-index: 1000;
+            backdrop-filter: blur(18px);
         }
         .filter-container {
-            max-width: 1200px;
+            max-width: 1080px;
             margin: 0 auto;
             display: flex;
             overflow-x: auto;
-            padding: 10px 15px;
-            gap: 8px;
+            padding: 14px 18px;
+            gap: 10px;
             -webkit-overflow-scrolling: touch;
         }
         .filter-container::-webkit-scrollbar { display: none; } /* Hide scrollbar */
- 
+
         .region-btn {
             background: none;
             border: 1px solid transparent;
@@ -226,7 +228,7 @@
 
         /* --- MAIN CONTENT & CONTAINERS --- */
         .main-container {
-            max-width: 1200px; /* Wider for two-column layout */
+            max-width: 1080px; /* Wider for two-column layout */
             margin: 30px auto;
             padding: 0 15px;
         }
@@ -259,33 +261,33 @@
 
         /* --- MODERN MATCH CARDS (Dribbble Inspired) --- */
         .match-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--frosted-border);
-            border-radius: 16px;
-            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 26px;
+            margin-bottom: 16px;
             transition: box-shadow 0.3s, transform 0.3s;
             overflow: hidden;
             position: relative;
         }
         .match-card:hover {
-            box-shadow: 0 8px 25px rgba(0,33,71,0.1);
-            transform: translateY(-3px);
+            box-shadow: 0 28px 65px rgba(0, 0, 0, 0.16);
+            transform: translateY(-2px);
         }
 
         .mc-body {
             display: grid;
-            grid-template-columns: 1fr 120px 1fr;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            padding: 25px 20px;
-            gap: 15px;
+            padding: 20px 18px;
+            gap: 12px;
         }
 
         .mc-team {
             font-weight: 700;
-            font-size: 1.05rem;
-            color: var(--navy-dark);
+            font-size: 1rem;
+            color: var(--white);
         }
         .mc-team1 { text-align: right; }
         .mc-team2 { text-align: left; }
@@ -294,24 +296,25 @@
             text-align: center;
         }
         .mc-score {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: var(--navy-dark);
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--white);
             display: flex;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
+            letter-spacing: 0.02em;
         }
         .mc-time {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 700;
-            color: var(--navy-dark);
+            color: rgba(255, 255, 255, 0.82);
         }
         .mc-status-text {
             font-size: 0.8rem;
             font-weight: 700;
             text-transform: uppercase;
             margin-top: 5px;
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.72);
         }
         .match-card.LIVE .mc-status-text {
             color: #ff4d4d;
