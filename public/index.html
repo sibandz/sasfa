@@ -232,6 +232,71 @@
             transform: rotate(-90deg);
         }
 
+        /* --- NEW: STANDINGS & SECTIONS --- */
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--navy);
+            margin: 24px 0 16px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .standings-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 16px;
+        }
+        .standings-title {
+            font-weight: 700;
+            color: var(--navy);
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            text-align: left;
+            color: var(--text-muted);
+            padding: 10px 8px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+        td {
+            padding: 12px 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .col-team { font-weight: 600; color: var(--text-main); }
+        .col-data { text-align: center; font-weight: 700; width: 45px; }
+        .team-seed {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.8em;
+            margin-left: 6px;
+        }
+        .col-pts {
+            font-weight: 700;
+            background-color: var(--lime);
+            color: var(--navy);
+            border-radius: 6px;
+            padding: 3px 6px;
+            display: inline-block;
+            min-width: 20px;
+        }
+        .placeholder-text {
+            padding: 40px 20px; text-align: center; color: var(--text-muted); background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+        }
+
         /* --- SOCIAL SECTION --- */
         .social-section {
             background: var(--white);
@@ -296,7 +361,7 @@
             grid-template-columns: 50px 1fr auto;
             gap: 12px;
             align-items: center;
-            transition: background 0.2s;
+            transition: background-color 0.2s;
         }
 
         .match-item:hover {
@@ -342,8 +407,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
-            min-width: 50px;
+            gap: 6px;
+            min-width: 30px;
             text-align: right;
         }
 
@@ -450,33 +515,28 @@
     </button>
 </header>
 
-<div class="tabs" id="tabs">
-    <button class="tab-btn active" data-tab="all">All</button>
-    <button class="tab-btn" data-tab="favorites">Favourites</button>
-    <button class="tab-btn" data-tab="competitions">Competitions</button>
+<div class="tabs" id="mainTabs">
+    <button class="tab-btn active" data-tab="home">Home</button>
+    <button class="tab-btn" data-tab="qualifying">Qualifying</button>
+    <button class="tab-btn" data-tab="playoffs">Playoffs</button>
+    <button class="tab-btn" data-tab="finals">Finals</button>
 </div>
 
-<div class="filters" id="filters">
+<!-- Region filters, hidden by default -->
+<div class="filters" id="regionFilters" style="display: none; flex-wrap: wrap;"></div>
+
+<!-- Status filters -->
+<div class="filters" id="statusFilters">
     <button class="filter-btn live active" data-filter="live">LIVE (0)</button>
     <button class="filter-btn" data-filter="finished">Finished</button>
     <button class="filter-btn" data-filter="upcoming">Upcoming</button>
 </div>
 
 <div class="main-container">
-    <div class="social-section">
-        <div class="social-title">Stay Updated</div>
-        <div class="social-links">
-            <a href="https://www.facebook.com/curro.sport/" target="_blank" class="social-link">
-                <svg viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"></path></svg>
-                <span>Follow on Facebook</span>
-            </a>
-            <a href="https://www.instagram.com/curro.sport/" target="_blank" class="social-link">
-                <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6a3.6 3.6 0 0 0-3.6-3.6H7.6zM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm4.5-3.5a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"></path></svg>
-                <span>Follow on Instagram</span>
-            </a>
-        </div>
-    </div>
-    <div id="matchesContainer"><!-- Dynamically populated --></div>
+    <div id="homeContent"></div>
+    <div id="qualifyingContent" style="display: none;"></div>
+    <div id="playoffsContent" style="display: none;"></div>
+    <div id="finalsContent" style="display: none;"></div>
 </div>
 
 <footer>
@@ -491,110 +551,219 @@
 </footer>
 
 <script>
-// Data structure
 let tournamentData = {};
-let currentFilter = 'live';
+let activeMainTab = 'home';
+let activeRegion = null;
+let activeStatusFilter = 'live';
 
-// Theme toggle
+// --- DOM ELEMENTS ---
+const mainTabs = document.getElementById('mainTabs');
+const regionFilters = document.getElementById('regionFilters');
+const statusFilters = document.getElementById('statusFilters');
+const homeContent = document.getElementById('homeContent');
+const qualifyingContent = document.getElementById('qualifyingContent');
+const playoffsContent = document.getElementById('playoffsContent');
+const finalsContent = document.getElementById('finalsContent');
+const contentPanes = { home: homeContent, qualifying: qualifyingContent, playoffs: playoffsContent, finals: finalsContent };
+
+// --- THEME LOGIC ---
 document.getElementById('theme-toggle').addEventListener('click', () => {
     const theme = document.body.getAttribute('data-theme');
-    document.body.setAttribute('data-theme', theme === 'dark' ? 'light' : 'dark');
-    localStorage.setItem('theme', theme === 'dark' ? 'light' : 'dark');
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    document.body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
 });
-
-// Load saved theme
 const savedTheme = localStorage.getItem('theme') || 'light';
 document.body.setAttribute('data-theme', savedTheme);
 
-// Load data from API
+// --- DATA LOADING ---
 async function loadData() {
     try {
         const response = await fetch('/api/get-data');
-        const data = await response.json();
-        tournamentData = data;
-        renderMatches();
+        tournamentData = await response.json();
+        if (!activeRegion && Object.keys(tournamentData).length > 0) {
+            activeRegion = Object.keys(tournamentData)[0];
+        }
+        updateView();
     } catch (error) {
         console.error('Error loading data:', error);
-        tournamentData = {};
-        renderMatches();
+        homeContent.innerHTML = '<div class="placeholder-text">Could not load tournament data.</div>';
     }
 }
 
-// Render matches
-function renderMatches() {
-    const container = document.getElementById('matchesContainer');
-    container.innerHTML = '';
+// --- MAIN RENDER LOGIC ---
+function updateView() {
+    mainTabs.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === activeMainTab));
+    Object.entries(contentPanes).forEach(([key, pane]) => pane.style.display = (key === activeMainTab) ? 'block' : 'none');
+    regionFilters.style.display = (activeMainTab === 'qualifying') ? 'flex' : 'none';
+    statusFilters.style.display = ['home', 'qualifying'].includes(activeMainTab) ? 'flex' : 'none';
 
-    if (!tournamentData || Object.keys(tournamentData).length === 0) {
-        container.innerHTML = '<div style="padding: 40px 20px; text-align: center; color: var(--text-muted);">No matches available</div>';
+    switch (activeMainTab) {
+        case 'home': renderHome(); break;
+        case 'qualifying': renderQualifying(); break;
+        case 'playoffs': renderPlayoffs(); break;
+        case 'finals': renderFinals(); break;
+    }
+    updateLiveCount();
+}
+
+// --- RENDER SUB-ROUTINES ---
+function renderHome() {
+    let html = `
+        <div class="social-section">
+            <div class="social-title">Stay Updated</div>
+            <div class="social-links">
+                <a href="https://www.facebook.com/CurroSport1" target="_blank" class="social-link">
+                    <svg viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"></path></svg>
+                    <span>Follow on Facebook</span>
+                </a>
+                <a href="https://www.instagram.com/curro.sport/" target="_blank" class="social-link">
+                    <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6a3.6 3.6 0 0 0-3.6-3.6H7.6zM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm4.5-3.5a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"></path></svg>
+                    <span>Follow on Instagram</span>
+                </a>
+            </div>
+        </div>`;
+
+    const allMatches = Object.values(tournamentData).flatMap(region => region.matches || []);
+    const finishedMatches = allMatches.filter(m => m.st === 'FINAL').map(m => ({ ...m, gd: Math.abs(m.s1 - m.s2) })).sort((a, b) => b.gd - a.gd).slice(0, 4);
+    if (finishedMatches.length > 0) {
+        html += '<div class="section-title">Top Results</div>';
+        finishedMatches.forEach(match => { html += renderMatch(match); });
+    }
+
+    const upcomingMatches = allMatches.filter(m => m.st === 'UPCOMING').slice(0, 5);
+    if (upcomingMatches.length > 0) {
+        html += '<div class="section-title">Upcoming Fixtures</div>';
+        upcomingMatches.forEach(match => { html += renderMatch(match); });
+    }
+
+    html += '<div class="section-title">Group Standings</div>';
+    for (const [regionName, regionData] of Object.entries(tournamentData)) {
+        if (regionData.pools) {
+            const poolsForDisplay = JSON.parse(JSON.stringify(regionData.pools));
+            calculateStandings(poolsForDisplay, regionData.matches);
+            html += renderStandings(poolsForDisplay, regionName);
+        }
+    }
+    homeContent.innerHTML = html;
+}
+
+function renderQualifying() {
+    regionFilters.innerHTML = Object.keys(tournamentData).map(region => `<button class="filter-btn ${region === activeRegion ? 'active' : ''}" data-region="${region}">${region}</button>`).join('');
+    const regionData = tournamentData[activeRegion];
+    if (!regionData) {
+        qualifyingContent.innerHTML = '<div class="placeholder-text">Select a region to view.</div>';
         return;
     }
+    let html = '';
+    const poolsForDisplay = JSON.parse(JSON.stringify(regionData.pools));
+    const hasLiveMatches = regionData.matches.some(m => m.st === 'LIVE');
+    calculateStandings(poolsForDisplay, regionData.matches, hasLiveMatches ? ['FINAL', 'LIVE'] : ['FINAL']);
+    html += renderStandings(poolsForDisplay, `${activeRegion} Standings`);
 
-    // Group matches by league/region
-    for (const [region, regionData] of Object.entries(tournamentData)) {
-        const matches = regionData.matches || [];
-        if (matches.length === 0) continue;
-
-        const section = document.createElement('div');
-        section.className = 'league-section';
-        
-        const header = document.createElement('div');
-        header.className = 'league-header';
-        header.innerHTML = `
-            <div class="league-flag">⚽</div>
-            <div class="league-info">
-                <div class="league-name">${region}</div>
-                <div class="league-country">Regional Qualification</div>
-            </div>
-            <div class="league-toggle">v</div>
-        `;
-
-        const matchesDiv = document.createElement('div');
-        matchesDiv.className = 'league-matches';
-
-        matches.forEach(match => {
-            const matchDiv = document.createElement('div');
-            matchDiv.className = 'match-item';
-            
-            const status = match.st || 'Upcoming';
-            const isLive = status === 'LIVE';
-            const time = match.t || '--:--';
-
-            matchDiv.innerHTML = `
-                <div class="match-time">
-                    ${isLive ? '<div style="color: var(--live); font-weight: 700;">LIVE</div>' : time}
-                </div>
-                <div class="match-teams">
-                    <div class="match-team">
-                        <div class="team-crest">${(match.t1 || '?').charAt(0)}</div>
-                        <div>${match.t1 || 'Team 1'}</div>
-                    </div>
-                    <div class="match-team">
-                        <div class="team-crest">${(match.t2 || '?').charAt(0)}</div>
-                        <div>${match.t2 || 'Team 2'}</div>
-                    </div>
-                </div>
-                <div class="match-score">
-                    <div class="score-value">${match.s1 || 0}<span style="margin: 0 4px;">-</span>${match.s2 || 0}</div>
-                    <div class="score-status ${isLive ? 'live' : ''}">${status}</div>
-                </div>
-            `;
-
-            matchesDiv.appendChild(matchDiv);
-        });
-
-        section.appendChild(header);
-        section.appendChild(matchesDiv);
-        container.appendChild(section);
-
-        // Toggle expand/collapse
-        header.addEventListener('click', () => {
-            section.classList.toggle('collapsed');
-        });
+    const statusMap = { finished: 'FINAL', upcoming: 'UPCOMING', live: 'LIVE' };
+    const filteredMatches = regionData.matches.filter(m => m.st === statusMap[activeStatusFilter]);
+    html += `<div class="section-title">${activeStatusFilter.charAt(0).toUpperCase() + activeStatusFilter.slice(1)} Matches</div>`;
+    if (filteredMatches.length > 0) {
+        filteredMatches.forEach(match => { html += renderMatch(match); });
+    } else {
+        html += `<div class="placeholder-text" style="margin-top: 16px;">No ${activeStatusFilter} matches for this region.</div>`;
     }
+    qualifyingContent.innerHTML = html;
 }
 
-// Initialize
+function renderPlayoffs() { playoffsContent.innerHTML = '<div class="placeholder-text">Playoffs fixtures will be updated at a later stage.</div>'; }
+function renderFinals() { finalsContent.innerHTML = '<div class="placeholder-text">Finals fixtures will be updated at a later stage.</div>'; }
+
+// --- HELPER FUNCTIONS ---
+function renderMatch(match) {
+    const status = match.st || 'UPCOMING';
+    return `
+        <div class="league-section"><div class="match-item">
+            <div class="match-time">
+                ${status === 'LIVE' ? `<div style="color: var(--live); font-weight: 700;">LIVE</div>` : match.t || '--:--'}
+                <div style="font-size: 0.7rem; margin-top: 2px;">${match.d ? match.d.split(' ')[0] : ''}</div>
+            </div>
+            <div class="match-teams">
+                <div class="match-team"><div class="team-crest">${(match.t1 || '?').charAt(0)}</div><div>${match.t1 || 'Team 1'}</div></div>
+                <div class="match-team"><div class="team-crest">${(match.t2 || '?').charAt(0)}</div><div>${match.t2 || 'Team 2'}</div></div>
+            </div>
+            <div class="match-score">
+                <div class="score-value">${match.s1 != null ? match.s1 : '-'}</div>
+                <div class="score-value">${match.s2 != null ? match.s2 : '-'}</div>
+            </div>
+        </div></div>`;
+}
+
+function renderStandings(pools, title) {
+    let html = `<div class="section-title">${title}</div>`;
+    for (const [poolName, teams] of Object.entries(pools)) {
+        html += `
+            <div class="standings-card">
+                <div class="standings-title">${poolName}</div>
+                <table>
+                    <thead><tr><th>Team</th><th class="col-data">GD</th><th class="col-data">Pts</th></tr></thead>
+                    <tbody>
+                        ${teams.sort((a, b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name)).map(team => `
+                            <tr>
+                                <td class="col-team">${team.name}<span class="team-seed">(#${team.seed})</span></td>
+                                <td class="col-data">${team.gd}</td>
+                                <td class="col-data"><span class="col-pts">${team.points}</span></td>
+                            </tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>`;
+    }
+    return html;
+}
+
+function calculateStandings(pools, matches, statusesToInclude = ['FINAL']) {
+    for (const poolName in pools) { pools[poolName].forEach(team => { team.points = 0; team.gd = 0; }); }
+    const allTeams = {};
+    for (const poolName in pools) { pools[poolName].forEach(team => { allTeams[team.name] = team; }); }
+    matches.filter(m => statusesToInclude.includes(m.st)).forEach(match => {
+        const t1 = allTeams[match.t1], t2 = allTeams[match.t2];
+        if (t1 && t2) {
+            t1.gd += match.s1 - match.s2;
+            t2.gd += match.s2 - match.s1;
+            if (match.s1 > match.s2) t1.points += 3;
+            else if (match.s2 > match.s1) t2.points += 3;
+            else { t1.points += 1; t2.points += 1; }
+        }
+    });
+}
+
+function updateLiveCount() {
+    const liveCount = Object.values(tournamentData).flatMap(r => r.matches || []).filter(m => m.st === 'LIVE').length;
+    const liveBtn = statusFilters.querySelector('[data-filter="live"]');
+    if (liveBtn) liveBtn.textContent = `LIVE (${liveCount})`;
+}
+
+// --- EVENT LISTENERS ---
+mainTabs.addEventListener('click', e => {
+    if (e.target.matches('.tab-btn')) {
+        activeMainTab = e.target.dataset.tab;
+        updateView();
+    }
+});
+
+statusFilters.addEventListener('click', e => {
+    if (e.target.matches('.filter-btn')) {
+        activeStatusFilter = e.target.dataset.filter;
+        statusFilters.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        e.target.classList.add('active');
+        if (activeMainTab === 'home') renderHome(); else renderQualifying();
+    }
+});
+
+regionFilters.addEventListener('click', e => {
+    if (e.target.matches('.filter-btn')) {
+        activeRegion = e.target.dataset.region;
+        renderQualifying();
+    }
+});
+
+// --- INITIALIZATION ---
 loadData();
 </script>
 
