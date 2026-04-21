@@ -149,8 +149,47 @@
         }
         @media (max-width: 768px) {
             .tab-btn {
-                padding: 12px 14px;
-                font-size: 0.8rem;
+                padding: 10px 10px;
+                font-size: 0.32rem;
+            }
+            
+            .social-title {
+                font-size: 0.38rem;
+            }
+            
+            .social-link {
+                padding: 6px 8px;
+                font-size: 0.32rem;
+                gap: 6px;
+            }
+            
+            .social-link svg {
+                width: 16px;
+                height: 16px;
+            }
+            
+            .filter-btn {
+                padding: 4px 10px;
+                font-size: 0.34rem;
+            }
+            
+            footer {
+                padding: 16px 12px;
+                font-size: 0.32rem;
+                margin-top: 20px;
+            }
+            
+            footer img {
+                height: 24px;
+                margin-bottom: 10px;
+            }
+            
+            .footer-link {
+                margin-top: 10px;
+            }
+            
+            .footer-link a {
+                font-size: 0.32rem;
             }
         }
 
@@ -245,11 +284,12 @@
 
         @media (max-width: 820px) {
             .main-container {
-                max-width: 600px; /* Revert to single column width */
-                padding: 16px 16px 60px;
+                max-width: 100%;
+                padding: 12px 12px 40px;
             }
             .content-grid {
                 grid-template-columns: 1fr; /* Stack columns */
+                gap: 20px;
             }
             .social-column, .standings-column {
                 position: static; /* Remove stickiness on mobile */
@@ -619,53 +659,85 @@
         /* --- MOBILE OPTIMIZED --- */
         @media (max-width: 768px) {
             header {
-                padding: 12px 16px;
+                padding: 10px 12px;
             }
 
             .logo-area {
-                font-size: 1rem;
+                font-size: 0.4rem;
             }
 
             .tabs {
-                padding: 0 16px;
+                padding: 0 12px;
             }
 
             .tab-btn {
-                padding: 14px 16px;
+                padding: 8px 10px;
+                font-size: 0.32rem;
             }
 
             .filters {
-                padding: 10px 16px;
+                padding: 8px 12px;
             }
 
             .league-section {
-                border-radius: 8px;
-                margin-bottom: 12px;
+                border-radius: 6px;
+                margin-bottom: 8px;
             }
 
             .match-item {
-                padding: 12px 14px;
+                padding: 8px 10px;
                 grid-template-columns: 1fr auto 1fr;
-                gap: 12px;
+                gap: 10px;
             }
 
             .match-team {
-                font-size: 0.85rem;
-                gap: 8px;
+                font-size: 0.34rem;
+                gap: 4px;
             }
 
             .team-crest {
-                width: 28px;
-                height: 28px;
-                font-size: 0.7rem;
+                width: 16px;
+                height: 16px;
+                font-size: 0.28rem;
             }
 
             .match-time {
-                font-size: 0.7rem;
+                font-size: 0.26rem;
+                min-width: 30px;
             }
 
             .score-value {
-                font-size: 1.1rem;
+                font-size: 0.44rem;
+            }
+            
+            .league-name {
+                font-size: 0.34rem;
+            }
+            
+            .league-country {
+                font-size: 0.28rem;
+            }
+            
+            .section-title {
+                font-size: 0.44rem;
+                margin: 12px 0 8px 0;
+            }
+            
+            .standings-title {
+                font-size: 0.36rem;
+            }
+            
+            table {
+                font-size: 0.32rem;
+            }
+            
+            th {
+                padding: 6px 4px;
+                font-size: 0.28rem;
+            }
+            
+            td {
+                padding: 6px 4px;
             }
         }
     </style>
