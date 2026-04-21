@@ -149,47 +149,47 @@
         }
         @media (max-width: 768px) {
             .tab-btn {
-                padding: 10px 10px;
-                font-size: 0.32rem;
+                padding: 12px 14px;
+                font-size: 0.85rem;
             }
             
             .social-title {
-                font-size: 0.38rem;
+                font-size: 0.9rem;
             }
             
             .social-link {
-                padding: 6px 8px;
-                font-size: 0.32rem;
-                gap: 6px;
+                padding: 10px 12px;
+                font-size: 0.85rem;
+                gap: 10px;
             }
             
             .social-link svg {
-                width: 16px;
-                height: 16px;
+                width: 20px;
+                height: 20px;
             }
             
             .filter-btn {
-                padding: 3px 8px;
-                font-size: 0.20rem;
+                padding: 6px 12px;
+                font-size: 0.8rem;
             }
             
             footer {
-                padding: 16px 12px;
-                font-size: 0.32rem;
-                margin-top: 20px;
+                padding: 24px 16px;
+                font-size: 0.75rem;
+                margin-top: 30px;
             }
             
             footer img {
-                height: 24px;
-                margin-bottom: 10px;
+                height: 32px;
+                margin-bottom: 12px;
             }
             
             .footer-link {
-                margin-top: 10px;
+                margin-top: 16px;
             }
             
             .footer-link a {
-                font-size: 0.32rem;
+                font-size: 0.75rem;
             }
         }
 
@@ -659,85 +659,80 @@
         /* --- MOBILE OPTIMIZED --- */
         @media (max-width: 768px) {
             header {
-                padding: 10px 12px;
+                padding: 12px 16px;
             }
 
             .logo-area {
-                font-size: 0.47rem;
+                font-size: 0.95rem;
             }
 
             .tabs {
-                padding: 0 12px;
-            }
-
-            .tab-btn {
-                padding: 8px 10px;
-                font-size: 0.38rem;
+                padding: 0 16px;
             }
 
             .filters {
-                padding: 8px 12px;
+                padding: 10px 16px;
             }
 
             .league-section {
-                border-radius: 6px;
-                margin-bottom: 8px;
+                border-radius: 8px;
+                margin-bottom: 12px;
             }
 
             .match-item {
-                padding: 8px 10px;
-                grid-template-columns: 1fr auto 1fr;
-                gap: 10px;
+                padding: 12px 10px;
+                grid-template-columns: minmax(100px, 1fr) auto minmax(100px, 1fr);
+                gap: 8px;
             }
 
             .match-team {
-                font-size: 0.47rem;
+                font-size: 0.75rem;
                 gap: 4px;
             }
 
             .team-crest {
-                width: 18px;
-                height: 18px;
-                font-size: 0.39rem;
+                width: 20px;
+                height: 20px;
+                font-size: 0.5rem;
             }
 
             .match-time {
-                font-size: 0.37rem;
-                min-width: 30px;
+                font-size: 0.6rem;
+                min-width: 45px;
             }
 
             .score-value {
-                font-size: 0.61rem;
+                font-size: 0.9rem;
             }
             
             .league-name {
-                font-size: 0.24rem;
+                font-size: 0.8rem;
             }
             
             .league-country {
-                font-size: 0.20rem;
+                font-size: 0.65rem;
             }
             
             .section-title {
-                font-size: 0.31rem;
-                margin: 12px 0 8px 0;
+                font-size: 0.95rem;
+                margin: 16px 0 10px 0;
             }
             
             .standings-title {
-                font-size: 0.42rem;
+                font-size: 0.85rem;
             }
             
             table {
-                font-size: 0.38rem;
+                font-size: 0.75rem;
             }
             
             th {
-                padding: 6px 4px;
-                font-size: 0.33rem;
+                padding: 8px 4px;
+                font-size: 0.65rem;
             }
             
             td {
-                padding: 6px 4px;
+                padding: 8px 4px;
             }
         }
     </style>
@@ -1250,17 +1245,20 @@ function renderPlayoffs() {
             const matchDescription = `${match.round} ${match.description || ''}`;
 
             html += `
-                <div class="match-item">
-                    <div class="match-time">${match.time}<div style="font-size: 0.7rem; margin-top: 2px;">SAT 23 MAY 2026</div></div>
-                    <div class="match-teams">
-                        <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">${matchDescription}</div>
-                        <div style="display: flex; flex-direction: column; gap: 6px;">
-                            <div class="match-team"><div class="team-crest">${(t1 || '?').charAt(0)}</div><div>${t1}</div></div>
-                            <div class="match-team"><div class="team-crest">${(t2 || '?').charAt(0)}</div><div>${t2}</div></div>
-                        </div>
+                <div class="league-section"><div class="match-item">
+                    <div class="match-time">
+                        ${match.time}
+                        <div style="font-size: 0.6rem; margin-top: 2px;">SAT 23 MAY 2026</div>
+                        <div style="font-size: 0.55rem; margin-top: 4px; color: var(--navy-light); white-space: nowrap;">${matchDescription}</div>
                     </div>
-                    <div class="match-score"><div class="score-value">-</div><div class="score-value">-</div></div>
-                </div>
+                    <div class="match-teams">
+                        <div class="match-team"><div class="team-crest">${(t1 || '?').charAt(0)}</div><div>${t1}</div></div>
+                        <div class="match-team"><div class="team-crest">${(t2 || '?').charAt(0)}</div><div>${t2}</div></div>
+                    </div>
+                    <div class="match-score">
+                        <div class="score-value">-:-</div>
+                    </div>
+                </div></div>
             `;
         });
         html += `</div>`;
