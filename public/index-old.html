@@ -957,7 +957,181 @@ function renderQualifying() {
 }
 
 function renderPlayoffs() {
-    regionFilters.innerHTML = Object.keys(tournamentData).map(region => `<button class="filter-btn ${
+    regionFilters.innerHTML = Object.keys(tournamentData).map(region => `<button class="filter-btn ${region === activeRegion ? 'active' : ''}" data-region="${region}">${region}</button>`).join('');
+    let html = '';
+    const playoffSchedule = [
+        { round: "Playoff round 1", time: "09:00", matchNum: 13, t1_key: "1st Pool A", t2_key: "2nd Pool B" },
+        { round: "Playoff round 2", time: "10:30", matchNum: 14, t1_key: "2nd Pool A", t2_key: "1st Pool B" },
+        { round: "Playoff round 3", time: "14:00", matchNum: 15, t1_key: "Loser M13", t2_key: "Loser M14", description: "(3rd and 4th)" },
+        { round: "Playoff round 4", time: "15:30", matchNum: 16, t1_key: "Winner M13", t2_key: "Winner M14", description: "(1st and 2nd)" }
+    ];
+
+    const regionName = activeRegion;
+    const regionData = tournamentData[regionName];
+
+    if (!regionData) {
+        playoffsContent.innerHTML = '<div class="placeholder-text">Select a region to view playoffs.</div>';
+        return;
+    }
+
+    html += `<div class="section-title">${regionName} Playoffs</div>`;
+
+    if (!regionData.pools || !regionData.pools['Pool A'] || !regionData.pools['Pool B']) {
+        html += '<div class="placeholder-text" style="margin-bottom: 16px;">Playoff data not available for this region.</div>';
+    } else {
+        const poolsForDisplay = JSON.parse(JSON.stringify(regionData.pools));
+        calculateStandings(poolsForDisplay, regionData.matches, ['FINAL']);
+        const poolA = poolsForDisplay['Pool A'];
+        const poolB = poolsForDisplay['Pool B'];
+
+        const isGroupStageComplete = [...poolA, ...poolB].every(team => team.played >= 3);
+        poolA.sort((a, b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name));
+        poolB.sort((a, b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name));
+
+        const teamMap = {
+            '1st Pool A': isGroupStageComplete ? poolA[0].name : 'TBC',
+            '2nd Pool A': isGroupStageComplete ? poolA[1].name : 'TBC',
+            '1st Pool B': isGroupStageComplete ? poolB[0].name : 'TBC',
+            '2nd Pool B': isGroupStageComplete ? poolB[1].name : 'TBC',
+            'Loser M13': isGroupStageComplete ? 'Loser Match 13' : 'TBC',
+            'Winner M13': isGroupStageComplete ? 'Winner Match 13' : 'TBC',
+            'Loser M14': isGroupStageComplete ? 'Loser Match 14' : 'TBC',
+            'Winner M14': isGroupStageComplete ? 'Winner Match 14' : 'TBC'
+        };
+
+        playoffSchedule.forEach(match => {
+            const t1 = teamMap[match.t1_key];
+            const t2 = teamMap[match.t2_key];
+            const matchDescription = `${match.round} ${match.description || ''}`;
+
+            html += `
+                <div class="league-section"><div class="match-item">
+                    <div class="match-time">
+                        ${match.time}
+                        <div style="font-size: 0.6rem; margin-top: 2px;">SAT 23 MAY 2026</div>
+                        <div style="font-size: 0.55rem; margin-top: 4px; color: var(--navy-light); white-space: nowrap;">${matchDescription}</div>
+                    </div>
+                    <div class="match-teams">
+                        <div class="match-team"><div class="team-crest">${(t1 || '?').charAt(0)}</div><div>${t1}</div></div>
+                        <div class="match-team"><div class="team-crest">${(t2 || '?').charAt(0)}</div><div>${t2}</div></div>
+                    </div>
+                    <div class="match-score">
+                        <div class="score-value">-:-</div>
+                    </div>
+                </div></div>
+            `;
+        });
+    }
+    playoffsContent.innerHTML = html || '<div class="placeholder-text">No regions available for playoffs.</div>';
+}
+
+function renderFinals() { finalsContent.innerHTML = '<div class="placeholder-text">Finals fixtures will be updated at a later stage.</div>'; }
+
+function renderMatch(match) {
+    const status = match.st || 'UPCOMING';
+    const timeDisplay = match.t || '--:--';
+    return `
+        <div class="league-section"><div class="match-item">
+            <div class="match-time">
+                ${status === 'LIVE' ? `<div style="color: var(--live); font-weight: 700;">LIVE</div>` : timeDisplay}
+                <div style="font-size: 0.6rem; margin-top: 2px;">${match.d || ''}</div>
+            </div>
+            <div class="match-teams">
+                <div class="match-team"><div class="team-crest">${(match.t1 || '?').charAt(0)}</div><div>${match.t1 || 'Team 1'}</div></div>
+                <div class="match-team"><div class="team-crest">${(match.t2 || '?').charAt(0)}</div><div>${match.t2 || 'Team 2'}</div></div>
+            </div>
+            <div class="match-score">
+                <div class="score-value">${match.s1 != null ? match.s1 : '-'}</div>
+                <div class="score-value">${match.s2 != null ? match.s2 : '-'}</div>
+            </div>
+        </div></div>`;
+}
+
+function renderStandings(pools, title) {
+    let html = `<div class="section-title">${title}</div>`;
+    for (const [poolName, teams] of Object.entries(pools)) {
+        html += `
+            <div class="standings-card">
+                <div class="standings-title">${poolName}</div>
+                <table>
+                    <thead><tr><th>Team</th><th class="col-data">P</th><th class="col-data">GD</th><th class="col-data">Pts</th></tr></thead>
+                    <tbody>
+                        ${teams.sort((a, b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name)).map((team, index) => {
+                            const isQualified = index < 2;
+                            const qualifiedClass = isQualified ? 'qualified' : '';
+                            const qualifiedMarker = isQualified ? '<span class="qualified-marker">Q</span>' : '';
+                            return `
+                                <tr class="${qualifiedClass}">
+                                    <td class="col-team">${team.name}<span class="team-seed">(#${team.seed})</span> ${qualifiedMarker}</td>
+                                    <td class="col-data">${team.played}</td>
+                                    <td class="col-data">${team.gd}</td>
+                                    <td class="col-data"><span class="col-pts">${team.points}</span></td>
+                                </tr>`;
+                        }).join('')}
+                    </tbody>
+                </table>
+            </div>`;
+    }
+    return html;
+}
+
+function calculateStandings(pools, matches, statusesToInclude = ['FINAL']) {
+    for (const poolName in pools) { pools[poolName].forEach(team => { team.points = 0; team.gd = 0; team.played = 0; }); }
+    const allTeams = {};
+    for (const poolName in pools) { pools[poolName].forEach(team => { allTeams[team.name] = team; }); }
+    matches.filter(m => statusesToInclude.includes(m.st)).forEach(match => {
+        const t1 = allTeams[match.t1], t2 = allTeams[match.t2];
+        if (t1 && t2) {
+            t1.played += 1;
+            t2.played += 1;
+            t1.gd += match.s1 - match.s2;
+            t2.gd += match.s2 - match.s1;
+            if (match.s1 > match.s2) t1.points += 3;
+            else if (match.s2 > match.s1) t2.points += 3;
+            else { t1.points += 1; t2.points += 1; }
+        }
+    });
+}
+
+function updateLiveCount() {
+    const liveCount = Object.values(tournamentData).flatMap(r => r.matches || []).filter(m => m.st === 'LIVE').length;
+    const liveBtn = statusFilters.querySelector('[data-filter="live"]');
+    if (liveBtn) {
+        liveBtn.textContent = `LIVE (${liveCount})`;
+        liveBtn.style.display = liveCount > 0 ? 'inline-block' : 'none';
+    }
+}
+
+mainTabs.addEventListener('click', e => {
+    if (e.target.matches('.tab-btn')) {
+        activeMainTab = e.target.dataset.tab;
+        updateView();
+    }
+});
+
+statusFilters.addEventListener('click', e => {
+    if (e.target.matches('.filter-btn')) {
+        activeStatusFilter = e.target.dataset.filter;
+        statusFilters.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        e.target.classList.add('active');
+        if (activeMainTab === 'home') renderHome(); else renderQualifying();
+    }
+});
+
+regionFilters.addEventListener('click', e => {
+    if (e.target.matches('.filter-btn')) {
+        activeRegion = e.target.dataset.region;
+        if (activeMainTab === 'qualifying') {
+            renderQualifying();
+        } else if (activeMainTab === 'playoffs') {
+            renderPlayoffs();
+        }
+    }
+});
+
+updateView();
+loadData();
+setInterval(loadData, 60000);
 </script>
 
 </body>
