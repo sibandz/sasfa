@@ -1202,11 +1202,22 @@ function renderFinals() { finalsContent.innerHTML = '<div class="placeholder-tex
 function renderMatch(match) {
     const status = match.st || 'UPCOMING';
     const scoreDisplay = `${match.s1 != null ? match.s1 : '-'}:${match.s2 != null ? match.s2 : '-'}`;
+    
+    // Format time with AM/PM
+    let timeDisplay = '--:--';
+    if (match.t) {
+        const [hours, mins] = match.t.split(':');
+        const hour = parseInt(hours);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+        timeDisplay = `${displayHour}:${mins} ${ampm}`;
+    }
+    
     return `
         <div class="league-section"><div class="match-item">
             <div class="match-time">
-                ${status === 'LIVE' ? `<div style="color: var(--live); font-weight: 700;">LIVE</div>` : match.t || '--:--'}
-                <div style="font-size: 0.7rem; margin-top: 2px;">${match.d ? match.d.split(' ')[0] : ''}</div>
+                ${status === 'LIVE' ? `<div style="color: var(--live); font-weight: 700;">LIVE</div>` : timeDisplay}
+                <div style="font-size: 0.6rem; margin-top: 2px;">${match.d ? match.d.split(' ')[0] : ''}</div>
             </div>
             <div class="match-teams">
                 <div class="match-team"><div class="team-crest">${(match.t1 || '?').charAt(0)}</div><div>${match.t1 || 'Team 1'}</div></div>
