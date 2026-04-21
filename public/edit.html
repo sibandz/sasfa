@@ -262,6 +262,7 @@
             </div>
             <div class="form-footer">
                 <button id="saveButton" type="button">Save update</button>
+                <button id="resetButton" type="button" style="background: #cf2a2a;">Reset to Defaults</button>
                 <div class="status-pill" id="saveStatus">Not saved</div>
             </div>
             <p class="hint">After saving, refresh the public fixtures page to see the latest results.</p>
@@ -539,6 +540,7 @@
     const saveStatus = document.getElementById('saveStatus');
     const loginForm = document.getElementById('loginForm');
     const saveButton = document.getElementById('saveButton');
+    const resetButton = document.getElementById('resetButton');
 
     async function loadSavedData() {
         try {
@@ -717,8 +719,22 @@
         }
     }
 
+    async function handleReset() {
+        if (confirm("Are you sure you want to reset ALL tournament data back to defaults? This will overwrite the live database and cannot be undone.")) {
+            tournamentData = JSON.parse(JSON.stringify(DEFAULT_TOURNAMENT_DATA));
+            try {
+                await saveData();
+                populateRegionOptions(); // Reloads the UI with the fresh defaults
+                setSaveStatus('Database reset to defaults successfully.');
+            } catch (error) {
+                setSaveStatus('Error resetting database to server!', false);
+            }
+        }
+    }
+
     loginForm.addEventListener('submit', handleLogin);
     saveButton.addEventListener('click', handleSave);
+    resetButton.addEventListener('click', handleReset);
     regionSelect.addEventListener('change', changeRegion);
     matchSelect.addEventListener('change', changeMatch);
     (async () => {
