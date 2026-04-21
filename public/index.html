@@ -169,8 +169,8 @@
             }
             
             .filter-btn {
-                padding: 4px 10px;
-                font-size: 0.34rem;
+                padding: 3px 8px;
+                font-size: 0.20rem;
             }
             
             footer {
@@ -691,35 +691,35 @@
             }
 
             .match-team {
-                font-size: 0.40rem;
+                font-size: 0.47rem;
                 gap: 4px;
             }
 
             .team-crest {
                 width: 18px;
                 height: 18px;
-                font-size: 0.33rem;
+                font-size: 0.39rem;
             }
 
             .match-time {
-                font-size: 0.31rem;
+                font-size: 0.37rem;
                 min-width: 30px;
             }
 
             .score-value {
-                font-size: 0.52rem;
+                font-size: 0.61rem;
             }
             
             .league-name {
-                font-size: 0.40rem;
+                font-size: 0.24rem;
             }
             
             .league-country {
-                font-size: 0.33rem;
+                font-size: 0.20rem;
             }
             
             .section-title {
-                font-size: 0.52rem;
+                font-size: 0.31rem;
                 margin: 12px 0 8px 0;
             }
             
@@ -1251,7 +1251,7 @@ function renderPlayoffs() {
 
             html += `
                 <div class="match-item">
-                    <div class="match-time">${match.time}<div style="font-size: 0.7rem; margin-top: 2px;">SAT 23 MAY</div></div>
+                    <div class="match-time">${match.time}<div style="font-size: 0.7rem; margin-top: 2px;">SAT 23 MAY 2026</div></div>
                     <div class="match-teams">
                         <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">${matchDescription}</div>
                         <div style="display: flex; flex-direction: column; gap: 6px;">
@@ -1289,7 +1289,7 @@ function renderMatch(match) {
         <div class="league-section"><div class="match-item">
             <div class="match-time">
                 ${status === 'LIVE' ? `<div style="color: var(--live); font-weight: 700;">LIVE</div>` : timeDisplay}
-                <div style="font-size: 0.6rem; margin-top: 2px;">${match.d ? match.d.split(' ')[0] : ''}</div>
+                <div style="font-size: 0.6rem; margin-top: 2px;">${match.d || ''}</div>
             </div>
             <div class="match-teams">
                 <div class="match-team"><div class="team-crest">${(match.t1 || '?').charAt(0)}</div><div>${match.t1 || 'Team 1'}</div></div>
