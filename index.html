@@ -45,8 +45,8 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', 'Segoe UI', Roboto, sans-serif; }
         body {
             background-image:
-                linear-gradient(to bottom, rgba(244, 247, 246, 0.85), rgba(232, 240, 242, 0.95)),
-                url('https://scontent-jnb2-1.xx.fbcdn.net/v/t39.30808-6/530475141_1157717453051195_3936214339797063509_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=110&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeGzhsG_k0Xc1DWx5jS34lCJ0m58myK1f6TSbnybIrV_pMN2LXgIP0fqMNjl1d1jQ6T0LoFTKcAr9i3GWxsN4Qi3&_nc_ohc=4oYI-0aGzKIQ7kNvwECs2Ki&_nc_oc=Adq3nnZDexAUSuT2oWIIEtUMpKxHk_vbtwujbdOm1K8mVESh1icEJr9AnJPI2fwohZ0&_nc_zt=23&_nc_ht=scontent-jnb2-1.xx&_nc_gid=PmKnrIyZFLiygiutYbiAww&_nc_ss=7a3a8&oh=00_Af0Ax2Gq8SB3q2bsIborJeuATzjcReiAtkQWYg3a5Gpexg&oe=69E5B58E');
+                linear-gradient(to bottom, rgba(244, 247, 246, 0.70), rgba(244, 247, 246, 0.85)), /* Made ~25% more visible */
+                url('https://scontent-jnb2-1.xx.fbcdn.net/v/t39.30808-6/530475141_1157717453051195_3936214339797063509_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=110&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeGzhsG_k0Xc1DWx5jS34lCJ0m58myK1f6TSbnybIrV_pMN2LXgIP0fqMNjl1d1jQ6T0LoFTKcAr9i3GWxsN4Qi3&_nc_ohc=4oYI-0aGzKIQ7kNvwECs2Ki&_nc_oc=Adq3nnZDexAUSuT2oWIIEtUMpKxHk_vbtwujbdOm1K8mVESh1icEJr9AnJPI2fwohZ0&_nc_zt=23&_nc_ht=scontent-jnb2-1.xx&_nc_gid=PmKnrIyZFLiygiutYbiAww&_nc_ss=7a3a8&oh=00_Af0Ax2Gq8SB3q2bsIborJeuATzjcReiAtkQWYg3a5Gpexg&oe=69E5B58E'); /* Replace 'background.jpg' with your image file name */
             background-size: cover;
             background-position: center center;
             background-attachment: fixed;
@@ -57,7 +57,7 @@
         }
         body[data-theme="dark"] {
             background-image:
-                linear-gradient(to bottom, rgba(10, 25, 41, 0.9), rgba(8, 22, 38, 0.98)),
+                linear-gradient(to bottom, rgba(10, 25, 41, 0.7), rgba(10, 25, 41, 0.85)),
                 url('https://scontent-jnb2-1.xx.fbcdn.net/v/t39.30808-6/530475141_1157717453051195_3936214339797063509_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=110&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeGzhsG_k0Xc1DWx5jS34lCJ0m58myK1f6TSbnybIrV_pMN2LXgIP0fqMNjl1d1jQ6T0LoFTKcAr9i3GWxsN4Qi3&_nc_ohc=4oYI-0aGzKIQ7kNvwECs2Ki&_nc_oc=Adq3nnZDexAUSuT2oWIIEtUMpKxHk_vbtwujbdOm1K8mVESh1icEJr9AnJPI2fwohZ0&_nc_zt=23&_nc_ht=scontent-jnb2-1.xx&_nc_gid=PmKnrIyZFLiygiutYbiAww&_nc_ss=7a3a8&oh=00_Af0Ax2Gq8SB3q2bsIborJeuATzjcReiAtkQWYg3a5Gpexg&oe=69E5B58E');
         }
 
@@ -133,54 +133,41 @@
         body[data-theme="dark"] .theme-btn .sun-icon { display: block; }
 
         .hero-title-area {
-            background: rgba(12, 22, 43, 0.92);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.22);
-            padding: 32px 24px;
+            background-color: rgba(0, 18, 38, 0.9);
+            padding: 40px 20px;
             text-align: center;
-            border-radius: 28px;
-            max-width: 1080px;
-            margin: 20px auto;
         }
         body[data-theme="dark"] .hero-title-area {
-            background: rgba(4, 14, 30, 0.95);
+            background-color: rgba(10, 25, 41, 0.9);
         }
         .hero-title-area h1 {
-            font-size: 2.4rem;
+            font-size: 2.2rem;
             text-transform: uppercase;
             font-weight: 900;
             color: var(--white);
-            letter-spacing: 0.8px;
-            line-height: 1.05;
+            letter-spacing: 1px;
         }
-        .hero-title-area p {
-            color: rgba(255, 255, 255, 0.72);
-            font-size: 1rem;
-            margin-top: 10px;
-            line-height: 1.6;
-        }
+        .hero-title-area p { color: #ccc; font-size: 1rem; margin-top: 5px;}
 
         /* --- REGION FILTER BAR --- */
         .filter-bar {
-            background: var(--card-bg);
-            border-bottom: 1px solid var(--frosted-border);
+            background: var(--card-bg-solid);
+            border-bottom: 1px solid var(--card-border);
             position: sticky;
             top: 0;
             z-index: 1000;
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
         }
         .filter-container {
-            max-width: 1080px;
+            max-width: 1200px;
             margin: 0 auto;
             display: flex;
             overflow-x: auto;
-            padding: 14px 18px;
-            gap: 10px;
+            padding: 10px 15px;
+            gap: 8px;
             -webkit-overflow-scrolling: touch;
         }
         .filter-container::-webkit-scrollbar { display: none; } /* Hide scrollbar */
-
+ 
         .region-btn {
             background: none;
             border: 1px solid transparent;
@@ -232,7 +219,7 @@
 
         /* --- MAIN CONTENT & CONTAINERS --- */
         .main-container {
-            max-width: 1080px; /* Wider for two-column layout */
+            max-width: 1200px; /* Wider for two-column layout */
             margin: 30px auto;
             padding: 0 15px;
         }
@@ -266,31 +253,31 @@
         /* --- MODERN MATCH CARDS (Dribbble Inspired) --- */
         .match-card {
             background: var(--card-bg);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--frosted-border);
-            border-radius: 26px;
-            margin-bottom: 16px;
+            border-radius: 16px;
+            margin-bottom: 15px;
             transition: box-shadow 0.3s, transform 0.3s;
             overflow: hidden;
             position: relative;
         }
         .match-card:hover {
-            box-shadow: 0 28px 65px rgba(0, 0, 0, 0.16);
-            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,33,71,0.1);
+            transform: translateY(-3px);
         }
 
         .mc-body {
             display: grid;
             grid-template-columns: minmax(0, 1fr) 120px minmax(0, 1fr);
             align-items: center;
-            padding: 20px 18px;
-            gap: 12px;
+            padding: 25px 20px;
+            gap: 15px;
         }
 
         .mc-team {
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 1.05rem;
             color: var(--navy-dark);
         }
         .mc-team1 { text-align: right; }
@@ -300,16 +287,15 @@
             text-align: center;
         }
         .mc-score {
-            font-size: 2rem;
-            font-weight: 900;
+            font-size: 2.2rem;
+            font-weight: 800;
             color: var(--navy-dark);
             display: flex;
             justify-content: center;
-            gap: 10px;
-            letter-spacing: 0.02em;
+            gap: 8px;
         }
         .mc-time {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--navy-dark);
         }
@@ -462,12 +448,6 @@
             fill: var(--text-muted);
         }
 
-        .facebook-embed {
-            margin-top: 20px;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
         footer { text-align: center; padding: 40px 20px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; border-top: 1px solid var(--card-border); margin-top: 40px;}
         .footer-logo {
             height: 50px;
@@ -526,9 +506,7 @@
 
 <div class="filter-bar">
     <div class="filter-container" id="regNav">
-        <!-- Placeholder for loading state -->
-        <p style="color: var(--text-muted); padding: 8px 16px; font-weight: 600; font-size: 0.85rem; width: 100%; text-align: center;">Loading regions...</p>
-    </div>
+        </div>
 </div>
 
 <div class="main-container">
@@ -545,9 +523,6 @@
                     <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6a3.6 3.6 0 0 0-3.6-3.6H7.6zM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm4.5-3.5a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"></path></svg>
                     <span>Instagram</span>
                 </a>
-                <div class="facebook-embed">
-                    <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fcurro.sport%2F&tabs=timeline&width=240&height=400&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="240" height="400" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
-                </div>
             </div>
         </div>
 
@@ -556,7 +531,6 @@
             <div id="matchesContent" class="tab-pane active">
                 <div class="fixtures-area">
                     <div id="matchesContainer">
-                        <div class="no-matches">Loading fixtures...</div>
                     </div>
                 </div>
             </div>
@@ -567,7 +541,6 @@
                 <div class="standings-area">
                     <div class="date-divider">Standings</div>
                     <div class="pool-container" id="standingsContainer">
-                        <div class="no-matches">Loading standings...</div>
                     </div>
                 </div>
             </div>
@@ -656,7 +629,7 @@
         "Western Cape": {
             pools: {
                 "Pool A": [
-                    {name: "Reddam House Constantia", seed: 1},
+                    {name: "Paul Roos Gimnasium", seed: 1},
                     {name: "Milnerton High School", seed: 4},
                     {name: "Curro Century City", seed: 5},
                     {name: "Curro Somerset West", seed: 8}
@@ -670,14 +643,14 @@
             },
             matches: [
                 { d: "Friday 17 April", t: "11:00", t1: "Milnerton High School", t2: "Curro Somerset West", s1: 0, s2: 0, st: "UPCOMING" },
-                { d: "Friday 17 April", t: "12:30", t1: "Reddam House Constantia", t2: "Curro Century City", s1: 0, s2: 0, st: "UPCOMING" },
+                { d: "Friday 17 April", t: "12:30", t1: "Paul Roos Gimnasium", t2: "Curro Century City", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Friday 17 April", t: "14:00", t1: "Meridian Pinehurst", t2: "Somerset College", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Friday 17 April", t: "15:30", t1: "Camps Bay High School", t2: "Curro Sandown", s1: 0, s2: 0, st: "UPCOMING" },
-                { d: "Saturday 18 April", t: "11:00", t1: "Reddam House Constantia", t2: "Milnerton High School", s1: 0, s2: 0, st: "UPCOMING" },
+                { d: "Saturday 18 April", t: "11:00", t1: "Paul Roos Gimnasium", t2: "Milnerton High School", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Saturday 18 April", t: "12:30", t1: "Curro Century City", t2: "Curro Somerset West", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Saturday 18 April", t: "14:00", t1: "Camps Bay High School", t2: "Meridian Pinehurst", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Saturday 18 April", t: "15:30", t1: "Curro Sandown", t2: "Somerset College", s1: 0, s2: 0, st: "UPCOMING" },
-                { d: "Sunday 19 April", t: "09:00", t1: "Reddam House Constantia", t2: "Curro Somerset West", s1: 0, s2: 0, st: "UPCOMING" },
+                { d: "Sunday 19 April", t: "09:00", t1: "Paul Roos Gimnasium", t2: "Curro Somerset West", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "10:30", t1: "Milnerton High School", t2: "Curro Century City", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "12:00", t1: "Camps Bay High School", t2: "Somerset College", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "13:30", t1: "Meridian Pinehurst", t2: "Curro Sandown", s1: 0, s2: 0, st: "UPCOMING" }
@@ -710,6 +683,7 @@
                 { d: "Sunday 19 April", t: "09:00", t1: "Hillcrest High School", t2: "Grantleigh College", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "10:30", t1: "Durban High School", t2: "Kloof High School", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "12:00", t1: "Glenwood High School", t2: "Creston College", s1: 0, s2: 0, st: "UPCOMING" },
+                { d: "Sunday 19 April", t: "13:30", t1: "Pinetown Boy's High School", t2: "Curro Hillcrest", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "13:30", t1: "Pinetown Boys' High School", t2: "Curro Hillcrest", s1: 0, s2: 0, st: "UPCOMING" }
             ]
         },
