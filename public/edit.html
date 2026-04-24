@@ -545,7 +545,7 @@
     async function loadSavedData() {
         try {
             // Fetch data from a central server instead of localStorage
-            const response = await fetch('/api/get-data'); // A hypothetical API endpoint
+            const response = await fetch('/api/get-data', { cache: 'no-store' });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
