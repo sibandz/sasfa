@@ -319,7 +319,7 @@
     "pools": {
       "Pool A": [
         {
-          "name": "Paul Roos Gimnasium",
+          "name": "Reddam House Constantia",
           "seed": 1
         },
         {
@@ -367,7 +367,7 @@
       {
         "d": "Friday 17 April",
         "t": "12:30",
-        "t1": "Paul Roos Gimnasium",
+        "t1": "Reddam House Constantia",
         "t2": "Curro Century City",
         "s1": 0,
         "s2": 0,
@@ -394,7 +394,7 @@
       {
         "d": "Saturday 18 April",
         "t": "11:00",
-        "t1": "Paul Roos Gimnasium",
+        "t1": "Reddam House Constantia",
         "t2": "Milnerton High School",
         "s1": 0,
         "s2": 0,
@@ -430,7 +430,7 @@
       {
         "d": "Sunday 19 April",
         "t": "09:00",
-        "t1": "Paul Roos Gimnasium",
+        "t1": "Reddam House Constantia",
         "t2": "Curro Somerset West",
         "s1": 0,
         "s2": 0,
