@@ -554,7 +554,17 @@
             // Merge fetched data with default data structure
             Object.keys(saved).forEach(region => {
                 if (tournamentData[region]) {
-                    tournamentData[region] = saved[region];
+                    if (saved[region].matches) {
+                        tournamentData[region].matches = saved[region].matches;
+                        tournamentData[region].matches.forEach(m => {
+                            if (m.t1 === "Paul Roos Gimnasium" || m.t1 === "Reddam Constantia") m.t1 = "Reddam House Constantia";
+                            if (m.t2 === "Paul Roos Gimnasium" || m.t2 === "Reddam Constantia") m.t2 = "Reddam House Constantia";
+                            if (m.t1 === "Pinetown Boy's High School" || m.t1 === "Pinetown Boys' High School") m.t1 = "Pinetown Boys High School";
+                            if (m.t2 === "Pinetown Boy's High School" || m.t2 === "Pinetown Boys' High School") m.t2 = "Pinetown Boys High School";
+                            if (m.t1 === "Saint Annes Technical") m.t1 = "Saint Annes Technical High School";
+                            if (m.t2 === "Saint Annes Technical") m.t2 = "Saint Annes Technical High School";
+                        });
+                    }
                 }
             });
         } catch (err) {
