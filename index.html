@@ -926,6 +926,7 @@
             pools[poolName].forEach(team => {
                 team.points = 0;
                 team.gd = 0;
+                team.played = 0;
             });
         }
 
@@ -947,6 +948,8 @@
             const team2 = allTeams[match.t2];
 
             if (team1 && team2) {
+                team1.played += 1;
+                team2.played += 1;
                 team1.gd += score1 - score2;
                 team2.gd += score2 - score1;
 
