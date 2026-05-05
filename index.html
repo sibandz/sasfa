@@ -897,19 +897,17 @@
 
     async function loadSavedData() {
         try {
-            // Fetch data from a central server instead of localStorage
-            const response = await fetch('/api/get-data'); // A hypothetical API endpoint
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            const savedData = localStorage.getItem(STORAGE_KEY);
+            if (savedData) {
+                const saved = JSON.parse(savedData);
+                Object.keys(saved).forEach(region => {
+                    if (DEFAULT_TOURNAMENT_DATA[region]) {
+                        tournamentData[region] = saved[region]; // Load into our working copy
+                    }
+                });
             }
-            const saved = await response.json();
-            Object.keys(saved).forEach(region => {
-                if (DEFAULT_TOURNAMENT_DATA[region]) {
-                    tournamentData[region] = saved[region]; // Load into our working copy
-                }
-            });
         } catch (err) {
-            console.warn('Unable to load saved tournament data from server. Using default data.', err);
+            console.warn('Unable to load saved tournament data from local storage. Using default data.', err);
         }
     }
 
