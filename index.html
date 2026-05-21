@@ -376,23 +376,7 @@
         }
 
         .mc-status-text {
-            display: block;
-            text-align: center;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-top: 10px;
-            color: var(--text-muted);
-        }
-        .match-card.LIVE .mc-status-text {
-            color: #ff4d4d;
-            animation: pulse 1.5s infinite;
-        }
-        .match-card.PROJECTED .mc-status-text {
-            color: var(--navy-med);
-        }
-        .match-card.CONFIRMED .mc-status-text {
-            color: #A0D61D; /* Bright Lime Green */
+            display: none;
         }
         @keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.6;} 100% {opacity: 1;} }
 
@@ -809,9 +793,7 @@
                 { d: "Sunday 19 April", t: "09:00", t1: "Saint Annes Technical High School", t2: "Bloemfontein High School", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "10:30", t1: "Brebner High School", t2: "Moroka High School", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "12:00", t1: "Virginia High School", t2: "Curro Bloemfontein", s1: 0, s2: 0, st: "UPCOMING" },
-                { d: "Sunday 19 April", t: "13:30", t1: "HTS Louis Botha", t2: "Hodisa Secondary School", s1: 0, s2: 0, st: "UPCOMING" },
-                { d: "Sunday 19 April", t: "15:00", t1: "1st Pool A", t2: "2nd Pool B", s1: 0, s2: 0, st: "CONFIRMED" },
-                { d: "Sunday 19 April", t: "16:30", t1: "1st Pool B", t2: "2nd Pool A", s1: 0, s2: 0, st: "CONFIRMED" }
+                { d: "Sunday 19 April", t: "13:30", t1: "HTS Louis Botha", t2: "Hodisa Secondary School", s1: 0, s2: 0, st: "UPCOMING" }
             ]
         },
         "Limpopo": {
@@ -1036,12 +1018,7 @@
         let statusToFilter = activeContentTab.toUpperCase();
         if (statusToFilter === 'FINISHED') statusToFilter = 'FINAL';
 
-        const filteredMatches = regionData.matches.filter(m => {
-            if (statusToFilter === 'UPCOMING') {
-                return ['UPCOMING', 'PROJECTED', 'CONFIRMED'].includes(m.st);
-            }
-            return m.st === statusToFilter;
-        });
+        const filteredMatches = regionData.matches.filter(m => m.st === statusToFilter);
 
         if (filteredMatches.length === 0) {
             matchesContainer.innerHTML = `<div class="no-matches">No ${activeContentTab.toLowerCase()} matches for this region. Check back soon for the latest action!</div>`;
@@ -1052,16 +1029,9 @@
                     html += `<div class="date-divider">${m.d}</div>`;
                 }
 
-                const isUpcomingLike = ['UPCOMING', 'PROJECTED', 'CONFIRMED'].includes(m.st);
-                const scoreContent = isUpcomingLike
+                const scoreContent = m.st === "UPCOMING"
                     ? `${m.t}`
                     : `${m.s1}-${m.s2}`;
-
-                let statusText = '';
-                if (m.st === 'LIVE') statusText = 'LIVE';
-                else if (m.st === 'FINAL') statusText = 'Full Time';
-                else if (m.st === 'PROJECTED') statusText = 'Projected Matchup';
-                else if (m.st === 'CONFIRMED') statusText = 'Confirmed Matchup';
 
                 const dayOfWeek = new Date(m.d).toLocaleDateString('en-US', { weekday: 'long' });
 
@@ -1078,7 +1048,7 @@
                             <div class="team-badge">${m.t2.charAt(0).toUpperCase()}</div>
                             <div class="mc-team mc-team2">${m.t2}</div>
                         </div>
-                        ${statusText ? `<div class="mc-status-text">${statusText}</div>` : ''}
+                        ${m.st !== "UPCOMING" ? `<div class="mc-status-text">${m.st === 'LIVE' ? 'LIVE' : 'Full Time'}</div>` : ''}
                     </div>`;
                 return html;
             }, '');
