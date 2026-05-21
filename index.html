@@ -913,9 +913,7 @@
             }
 
             Object.keys(saved).forEach(region => {
-                if (DEFAULT_TOURNAMENT_DATA[region]) {
-                    tournamentData[region] = saved[region]; // Load into our working copy
-                }
+                tournamentData[region] = saved[region]; // Trust the server completely
             });
         } catch (err) {
             console.warn('Unable to load saved tournament data from server. Using local or default data.', err);
@@ -923,9 +921,7 @@
             if (localData) {
                 const saved = JSON.parse(localData);
                 Object.keys(saved).forEach(region => {
-                    if (DEFAULT_TOURNAMENT_DATA[region]) {
-                        tournamentData[region] = saved[region];
-                    }
+                    tournamentData[region] = saved[region]; // Trust local storage completely
                 });
             }
         }
