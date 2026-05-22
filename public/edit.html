@@ -279,7 +279,7 @@
             </div>
             <div class="form-row">
                 <label>Date
-                    <input id="playoffDate" type="text" placeholder="Friday 23 May" />
+                    <input id="playoffDate" type="text" placeholder="Saturday 23 May" />
                 </label>
                 <label>Time
                     <input id="playoffTime" type="text" placeholder="HH:MM" />
@@ -710,10 +710,10 @@
         if (poolA.length < 2 || poolB.length < 2) return [];
 
         return [
-            { d: 'TBD', t: 'TBD', t1: poolA[0].name, t2: poolB[1].name, s1: null, s2: null, st: 'UPCOMING' },
-            { d: 'TBD', t: 'TBD', t1: poolA[1].name, t2: poolB[0].name, s1: null, s2: null, st: 'UPCOMING' },
-            { d: 'TBD', t: 'TBD', t1: 'Loser Match 13', t2: 'Loser Match 14', s1: null, s2: null, st: 'UPCOMING' },
-            { d: 'TBD', t: 'TBD', t1: 'Winner Match 13', t2: 'Winner Match 14', s1: null, s2: null, st: 'UPCOMING' }
+            { d: 'Saturday 23 May', t: '09:00', t1: poolA[0].name, t2: poolB[1].name, s1: null, s2: null, st: 'UPCOMING' },
+            { d: 'Saturday 23 May', t: '10:30', t1: poolA[1].name, t2: poolB[0].name, s1: null, s2: null, st: 'UPCOMING' },
+            { d: 'Saturday 23 May', t: '14:00', t1: 'Loser Match 13', t2: 'Loser Match 14', s1: null, s2: null, st: 'UPCOMING' },
+            { d: 'Saturday 23 May', t: '15:30', t1: 'Winner Match 13', t2: 'Winner Match 14', s1: null, s2: null, st: 'UPCOMING' }
         ];
     }
 
