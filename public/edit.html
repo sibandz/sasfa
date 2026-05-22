@@ -266,9 +266,8 @@
                 <div class="status-pill" id="saveStatus">Not saved</div>
             </div>
             <p class="hint">After saving, refresh the public fixtures page to see the latest results.</p>
-        </div>
 
-        <div class="page-card" style="margin-top: 24px;">
+            <div class="page-card" style="margin-top: 24px;">
             <h2 class="card-title">Playoff Fixtures</h2>
             <div class="form-row">
                 <label>Fixture
@@ -315,6 +314,7 @@
                 <div class="status-pill" id="playoffSaveStatus">Not saved</div>
             </div>
             <p class="hint">Use this section to manage playoff matchups and results separately from pool matches.</p>
+            </div>
         </div>
 
         <div class="note-box">
@@ -626,6 +626,9 @@
                             if (m.t1 === "Saint Annes Technical") m.t1 = "Saint Annes Technical High School";
                             if (m.t2 === "Saint Annes Technical") m.t2 = "Saint Annes Technical High School";
                         });
+                    }
+                    if (saved[region].playoffs) {
+                        tournamentData[region].playoffs = saved[region].playoffs;
                     }
                 }
             });
