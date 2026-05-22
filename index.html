@@ -200,6 +200,21 @@
             color: var(--white);
             letter-spacing: 1px;
         }
+        .stats-strip {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            max-width: 1200px;
+            margin: 20px auto 0;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(24, 69, 118, 0.05);
+        }
+        .stat-box { flex: 1 1 0; text-align: center; min-width: 120px; }
+        .stat-value { font-size: 1.8rem; font-weight: 900; color: var(--navy-dark); }
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-top: 6px; }
         .hero-title-area p { color: #ccc; font-size: 1rem; margin-top: 5px;}
 
         /* --- REGION FILTER BAR --- */
@@ -577,6 +592,13 @@
 <div class="hero-title-area">
     <h1>Fixtures & Results</h1>
     <p>Regional Qualification Tournament 2026<br>pty @sasfa ltd</p>
+</div>
+
+<div class="stats-strip" id="statsStrip">
+    <div class="stat-box"><div class="stat-value" id="statTeams">--</div><div class="stat-label">Teams</div></div>
+    <div class="stat-box"><div class="stat-value" id="statMatches">--</div><div class="stat-label">Matches</div></div>
+    <div class="stat-box"><div class="stat-value" id="statGoals">--</div><div class="stat-label">Goals</div></div>
+    <div class="stat-box"><div class="stat-value" id="statNextMatch" style="font-size: 1.1rem; display: flex; align-items: center; justify-content: center; height: 100%; min-height: 34px;">--</div><div class="stat-label">Next Match</div></div>
 </div>
 
 <div class="filter-bar">
@@ -973,6 +995,68 @@
         ).join('');
 
         const regionData = tournamentData[activeRegion];
+        const allRegionMatches = [
+            ...(regionData.matches || []),
+            ...(regionData.playoffs || [])
+        ];
+
+        const statTeams = new Set();
+        Object.values(regionData.pools || {}).flat().forEach(team => {
+            if (team && team.name) statTeams.add(team.name);
+        });
+
+        const totalMatches = allRegionMatches.length;
+        const totalGoals = allRegionMatches.reduce((sum, match) => {
+            if ((match.st === 'LIVE' || match.st === 'FINAL') && match.s1 != null && match.s2 != null) {
+                return sum + match.s1 + match.s2;
+            }
+            return sum;
+        }, 0);
+
+        const upcomingMatchesAll = allRegionMatches.filter(match => match.st === 'LIVE' || match.st === 'UPCOMING');
+        const parseTime = t => {
+            const [h, m] = (t || '00:00').split(':').map(v => Number(v));
+            return Number.isNaN(h) || Number.isNaN(m) ? 0 : h * 60 + m;
+        };
+        const parseDateLabel = label => {
+            if (!label) return Number.MAX_SAFE_INTEGER;
+            const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            const match = label.match(/(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)/i);
+            if (!match) return Number.MAX_SAFE_INTEGER;
+            const day = Number(match[1]);
+            const month = monthNames.findIndex(m => m.toLowerCase() === match[2].toLowerCase());
+            return month >= 0 ? new Date(2026, month, day).getTime() : Number.MAX_SAFE_INTEGER;
+        };
+        upcomingMatchesAll.sort((a, b) => {
+            const statusOrder = { LIVE: 0, UPCOMING: 1, FINAL: 2 };
+            const orderA = statusOrder[a.st] ?? 3;
+            const orderB = statusOrder[b.st] ?? 3;
+            if (orderA !== orderB) return orderA - orderB;
+            const dateA = parseDateLabel(a.d);
+            const dateB = parseDateLabel(b.d);
+            if (dateA !== dateB) return dateA - dateB;
+            return parseTime(a.t) - parseTime(b.t);
+        });
+
+        const statTeamsEl = document.getElementById('statTeams');
+        if (statTeamsEl) statTeamsEl.textContent = statTeams.size;
+        const statMatchesEl = document.getElementById('statMatches');
+        if (statMatchesEl) statMatchesEl.textContent = totalMatches;
+        const statGoalsEl = document.getElementById('statGoals');
+        if (statGoalsEl) statGoalsEl.textContent = totalGoals;
+        const statNextMatchEl = document.getElementById('statNextMatch');
+        if (statNextMatchEl) {
+            if (upcomingMatchesAll.length > 0) {
+                const nextMatch = upcomingMatchesAll[0];
+                const nextDate = nextMatch.st === 'LIVE' ? '' : `${nextMatch.d || 'TBD'} `;
+                const nextTime = nextMatch.st === 'LIVE' ? '' : `${nextMatch.t || 'TBD'} `;
+                statNextMatchEl.textContent = nextMatch.st === 'LIVE'
+                    ? `LIVE: ${nextMatch.t1} vs ${nextMatch.t2}`
+                    : `${nextDate}${nextTime}${nextMatch.t1} vs ${nextMatch.t2}`;
+            } else {
+                statNextMatchEl.textContent = 'Finished';
+            }
+        }
 
         // 3. Calculate and Render Standings (always visible)
         // Create a deep copy of the pools to avoid modifying the original data during calculation.
