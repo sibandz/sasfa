@@ -1047,22 +1047,53 @@ function renderMatch(match) {
         </div></div>`;
 }
 
-function renderStandings(pools, title) {
-    let html = `<div class="section-title">${title}</div>`;
+function compareTeams(a, b, matches) {
+    if (b.points !== a.points) return b.points - a.points;
+    if (b.gd !== a.gd) return b.gd - a.gd;
+
+    // Head-to-Head Tiebreaker
+    if (matches && matches.length > 0) {
+        const normalize = name => (name || '').replace(/['\s]/g, '').toLowerCase();
+        const normA = normalize(a.name);
+        const normB = normalize(b.name);
+
+        const h2hMatch = matches.find(m => 
+            (m.st === 'FINAL' || m.st === 'LIVE') && 
+            ((normalize(m.t1) === normA && normalize(m.t2) === normB) || 
+             (normalize(m.t1) === normB && normalize(m.t2) === normA))
+        );
+
+        if (h2hMatch && h2hMatch.s1 != null && h2hMatch.s2 != null) {
+            const scoreA = normalize(h2hMatch.t1) === normA ? h2hMatch.s1 : h2hMatch.s2;
+            const scoreB = normalize(h2hMatch.t1) === normB ? h2hMatch.s1 : h2hMatch.s2;
+            if (scoreA !== scoreB) return scoreB - scoreA;
+        }
+    }
+
+    // Fallback to Seed ranking if tied and no H2H
+    if (a.seed && b.seed && a.seed !== b.seed) {
+        return a.seed - b.seed;
+    }
+    return a.name.localeCompare(b.name);
+}
+
+function renderStandings(pools, regionName, matches = []) {
+    let html = `<div class="section-title">${regionName || ''}</div>`;
     for (const [poolName, teams] of Object.entries(pools)) {
+        const sortedTeams = [...teams].sort((a, b) => compareTeams(a, b, matches));
         html += `
             <div class="standings-card">
                 <div class="standings-title">${poolName}</div>
                 <table>
                     <thead><tr><th>Team</th><th class="col-data">P</th><th class="col-data">GD</th><th class="col-data">Pts</th></tr></thead>
                     <tbody>
-                        ${teams.sort((a, b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name)).map((team, index) => {
+                        ${sortedTeams.map((team, index) => {
                             const isQualified = index < 2;
                             const qualifiedClass = isQualified ? 'qualified' : '';
                             const qualifiedMarker = isQualified ? '<span class="qualified-marker">Q</span>' : '';
                             return `
                                 <tr class="${qualifiedClass}">
-                                    <td class="col-team">${team.name}<span class="team-seed">(#${team.seed})</span> ${qualifiedMarker}</td>
+                                    <td class="col-team">${team.name}${team.seed ? `<span class="team-seed">(#${team.seed})</span>` : ''} ${qualifiedMarker}</td>
                                     <td class="col-data">${team.played}</td>
                                     <td class="col-data">${team.gd}</td>
                                     <td class="col-data"><span class="col-pts">${team.points}</span></td>
