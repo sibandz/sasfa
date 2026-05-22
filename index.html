@@ -376,23 +376,7 @@
         }
 
         .mc-status-text {
-            display: block;
-            text-align: center;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-top: 10px;
-            color: var(--text-muted);
-        }
-        .match-card.LIVE .mc-status-text {
-            color: #ff4d4d;
-            animation: pulse 1.5s infinite;
-        }
-        .match-card.PROJECTED .mc-status-text {
-            color: var(--navy-med);
-        }
-        .match-card.CONFIRMED .mc-status-text {
-            color: #A0D61D; /* Bright Lime Green */
+            display: none;
         }
         @keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.6;} 100% {opacity: 1;} }
 
@@ -809,9 +793,7 @@
                 { d: "Sunday 19 April", t: "09:00", t1: "Saint Annes Technical High School", t2: "Bloemfontein High School", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "10:30", t1: "Brebner High School", t2: "Moroka High School", s1: 0, s2: 0, st: "UPCOMING" },
                 { d: "Sunday 19 April", t: "12:00", t1: "Virginia High School", t2: "Curro Bloemfontein", s1: 0, s2: 0, st: "UPCOMING" },
-                { d: "Sunday 19 April", t: "13:30", t1: "HTS Louis Botha", t2: "Hodisa Secondary School", s1: 0, s2: 0, st: "UPCOMING" },
-                { d: "Sunday 19 April", t: "15:00", t1: "1st Pool A", t2: "2nd Pool B", s1: 0, s2: 0, st: "CONFIRMED" },
-                { d: "Sunday 19 April", t: "16:30", t1: "1st Pool B", t2: "2nd Pool A", s1: 0, s2: 0, st: "CONFIRMED" }
+                { d: "Sunday 19 April", t: "13:30", t1: "HTS Louis Botha", t2: "Hodisa Secondary School", s1: 0, s2: 0, st: "UPCOMING" }
             ]
         },
         "Limpopo": {
@@ -916,32 +898,18 @@
     async function loadSavedData() {
         try {
             // Fetch data from a central server instead of localStorage
-            const response = await fetch('/api/get-data', { cache: 'no-store' }); 
+            const response = await fetch('/api/get-data'); // A hypothetical API endpoint
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const saved = await response.json();
-
-            // Fallback: If server is empty, check localStorage (in case edit.html saves there)
-            if (Object.keys(saved).length === 0) {
-                const localData = localStorage.getItem(STORAGE_KEY);
-                if (localData) {
-                    Object.assign(saved, JSON.parse(localData));
-                }
-            }
-
             Object.keys(saved).forEach(region => {
-                tournamentData[region] = saved[region]; // Trust the server completely
+                if (DEFAULT_TOURNAMENT_DATA[region]) {
+                    tournamentData[region] = saved[region]; // Load into our working copy
+                }
             });
         } catch (err) {
-            console.warn('Unable to load saved tournament data from server. Using local or default data.', err);
-            const localData = localStorage.getItem(STORAGE_KEY);
-            if (localData) {
-                const saved = JSON.parse(localData);
-                Object.keys(saved).forEach(region => {
-                    tournamentData[region] = saved[region]; // Trust local storage completely
-                });
-            }
+            console.warn('Unable to load saved tournament data from server. Using default data.', err);
         }
     }
 
@@ -989,65 +957,6 @@
         });
     }
 
-    function compareTeams(a, b, matches) {
-        if (b.points !== a.points) return b.points - a.points;
-        if (b.gd !== a.gd) return b.gd - a.gd;
-
-        // Head-to-Head Tiebreaker
-        if (matches && matches.length > 0) {
-            const normalize = name => (name || '').replace(/['\s]/g, '').toLowerCase();
-            const normA = normalize(a.name);
-            const normB = normalize(b.name);
-
-            const h2hMatch = matches.find(m => 
-                (m.st === 'FINAL' || m.st === 'LIVE') && 
-                ((normalize(m.t1) === normA && normalize(m.t2) === normB) || 
-                 (normalize(m.t1) === normB && normalize(m.t2) === normA))
-            );
-
-            if (h2hMatch && h2hMatch.s1 != null && h2hMatch.s2 != null) {
-                const scoreA = normalize(h2hMatch.t1) === normA ? h2hMatch.s1 : h2hMatch.s2;
-                const scoreB = normalize(h2hMatch.t1) === normB ? h2hMatch.s1 : h2hMatch.s2;
-                if (scoreA !== scoreB) return scoreB - scoreA;
-            }
-        }
-
-        // Fallback to Seed ranking if tied and no H2H
-        if (a.seed && b.seed && a.seed !== b.seed) {
-            return a.seed - b.seed;
-        }
-        return a.name.localeCompare(b.name);
-    }
-
-    function renderStandings(pools, regionName, matches = []) {
-        let html = '';
-        for (const [poolName, teams] of Object.entries(pools)) {
-            const sortedTeams = [...teams].sort((a, b) => compareTeams(a, b, matches));
-            html += `
-                <div class="standings-card">
-                    <div class="standings-title">${regionName ? regionName + ' - ' : ''}${poolName}</div>
-                    <table>
-                        <thead><tr><th>Team</th><th class="col-data">P</th><th class="col-data">GD</th><th class="col-data">Pts</th></tr></thead>
-                        <tbody>
-                            ${sortedTeams.map((team, index) => {
-                                const isQualified = index < 2;
-                                const qualifiedClass = isQualified ? 'qualified' : '';
-                                const qualifiedMarker = isQualified ? '<span class="qualified-marker">Q</span>' : '';
-                                return `
-                                    <tr class="${qualifiedClass}">
-                                        <td class="col-team">${team.name}${team.seed ? `<span class="team-seed">(#${team.seed})</span>` : ''} ${qualifiedMarker}</td>
-                                        <td class="col-data">${team.played}</td>
-                                        <td class="col-data">${team.gd}</td>
-                                        <td class="col-data"><span class="col-pts">${team.points}</span></td>
-                                    </tr>`;
-                            }).join('')}
-                        </tbody>
-                    </table>
-                </div>`;
-        }
-        return html;
-    }
-
     function updateView() {
         const nav = document.getElementById('regNav');
         const contentTabsContainer = document.getElementById('contentTabs');
@@ -1077,18 +986,25 @@
         // Calculate standings based on the determined statuses.
         calculateStandings(poolsForDisplay, regionData.matches, statusesToInclude);
 
-        standingsContainer.innerHTML = renderStandings(poolsForDisplay, activeRegion, regionData.matches);
+        standingsContainer.innerHTML = Object.keys(poolsForDisplay).map(p => `
+            <div class="pool-card">
+                <div class="pool-title">${p} ${hasLiveMatches ? '<span class="live-indicator">LIVE</span>' : ''}</div>
+                <table>
+                    <thead><tr><th>Team</th><th class="col-data">GD</th><th class="col-data">Pts</th></tr></thead>
+                    <tbody>
+                    ${poolsForDisplay[p]
+                        .sort((a,b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name))
+                        .map(team => `<tr><td class="col-team">${team.name}<span class="team-seed">(#${team.seed})</span></td><td class="col-data">${team.gd}</td><td class="col-data"><span class="col-pts">${team.points}</span></td></tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `).join('');
 
         // 4. Render Matches based on the active tab
         let statusToFilter = activeContentTab.toUpperCase();
         if (statusToFilter === 'FINISHED') statusToFilter = 'FINAL';
 
-        const filteredMatches = regionData.matches.filter(m => {
-            if (statusToFilter === 'UPCOMING') {
-                return ['UPCOMING', 'PROJECTED', 'CONFIRMED'].includes(m.st);
-            }
-            return m.st === statusToFilter;
-        });
+        const filteredMatches = regionData.matches.filter(m => m.st === statusToFilter);
 
         if (filteredMatches.length === 0) {
             matchesContainer.innerHTML = `<div class="no-matches">No ${activeContentTab.toLowerCase()} matches for this region. Check back soon for the latest action!</div>`;
@@ -1099,16 +1015,9 @@
                     html += `<div class="date-divider">${m.d}</div>`;
                 }
 
-                const isUpcomingLike = ['UPCOMING', 'PROJECTED', 'CONFIRMED'].includes(m.st);
-                const scoreContent = isUpcomingLike
+                const scoreContent = m.st === "UPCOMING"
                     ? `${m.t}`
                     : `${m.s1}-${m.s2}`;
-
-                let statusText = '';
-                if (m.st === 'LIVE') statusText = 'LIVE';
-                else if (m.st === 'FINAL') statusText = 'Full Time';
-                else if (m.st === 'PROJECTED') statusText = 'Projected Matchup';
-                else if (m.st === 'CONFIRMED') statusText = 'Confirmed Matchup';
 
                 const dayOfWeek = new Date(m.d).toLocaleDateString('en-US', { weekday: 'long' });
 
@@ -1125,7 +1034,7 @@
                             <div class="team-badge">${m.t2.charAt(0).toUpperCase()}</div>
                             <div class="mc-team mc-team2">${m.t2}</div>
                         </div>
-                        ${statusText ? `<div class="mc-status-text">${statusText}</div>` : ''}
+                        ${m.st !== "UPCOMING" ? `<div class="mc-status-text">${m.st === 'LIVE' ? 'LIVE' : 'Full Time'}</div>` : ''}
                     </div>`;
                 return html;
             }, '');
@@ -1183,15 +1092,4 @@
 </script>
 
 </body>
-</html><!DOCTYPE html>
-<html lang="en">
-
-< seconds.
-}
-
-initializeApp();
-</script>
-
-</body>
 </html>
-}
