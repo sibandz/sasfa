@@ -805,6 +805,23 @@
         playoffSaveStatus.style.color = success ? '#0f5a30' : '#8f1a1a';
     }
 
+    function getMatchOutcome(match) {
+        if (!match || match.st !== 'FINAL' || match.s1 == null || match.s2 == null) return null;
+        if (match.s1 === match.s2) return null; // No clear winner/loser in a draw
+        return match.s1 > match.s2
+            ? { winner: match.t1, loser: match.t2 }
+            : { winner: match.t2, loser: match.t1 };
+    }
+
+    function normalizeTeamName(name) {
+        return (name || '').replace(/['\s]/g, '').toLowerCase();
+    }
+
+    function isPlayoffPlaceholder(teamName) {
+        const normalized = normalizeTeamName(teamName);
+        return normalized.startsWith('winnerm') || normalized.startsWith('loserm');
+    }
+
     async function handlePlayoffSave() {
         try {
             const regionData = tournamentData[activeRegion];
@@ -823,6 +840,41 @@
             fixture.s1 = Number(playoffScore1.value || 0);
             fixture.s2 = Number(playoffScore2.value || 0);
 
+            // Auto-update subsequent playoff matches if this one is final and has an outcome
+            if (fixture.st === 'FINAL' && fixture.s1 != null && fixture.s2 != null && regionData.playoffs) {
+                const currentMatchId = activePlayoffIndex + 13; // Playoff matches start from 13
+                const outcome = getMatchOutcome(fixture);
+
+                if (outcome) {
+                    for (let i = 0; i < regionData.playoffs.length; i++) {
+                        if (i === activePlayoffIndex) continue; // Don't update self
+
+                        const subsequentMatch = regionData.playoffs[i];
+
+                        // Check home team for placeholder
+                        const t1Placeholder = `Winner Match ${currentMatchId}`;
+                        const t1LoserPlaceholder = `Loser Match ${currentMatchId}`;
+                        if (normalizeTeamName(subsequentMatch.t1) === normalizeTeamName(t1Placeholder)) {
+                            subsequentMatch.t1 = outcome.winner;
+                            console.log(`Updated T1 of Match ${i+13} to winner: ${outcome.winner}`);
+                        } else if (normalizeTeamName(subsequentMatch.t1) === normalizeTeamName(t1LoserPlaceholder)) {
+                            subsequentMatch.t1 = outcome.loser;
+                            console.log(`Updated T1 of Match ${i+13} to loser: ${outcome.loser}`);
+                        }
+
+                        // Check away team for placeholder
+                        const t2Placeholder = `Winner Match ${currentMatchId}`;
+                        const t2LoserPlaceholder = `Loser Match ${currentMatchId}`;
+                        if (normalizeTeamName(subsequentMatch.t2) === normalizeTeamName(t2Placeholder)) {
+                            subsequentMatch.t2 = outcome.winner;
+                            console.log(`Updated T2 of Match ${i+13} to winner: ${outcome.winner}`);
+                        } else if (normalizeTeamName(subsequentMatch.t2) === normalizeTeamName(t2LoserPlaceholder)) {
+                            subsequentMatch.t2 = outcome.loser;
+                            console.log(`Updated T2 of Match ${i+13} to loser: ${outcome.loser}`);
+                        }
+                    }
+                }
+            }
             await saveData();
             populatePlayoffOptions();
             setPlayoffStatus('Playoff fixture saved successfully. Refresh public page.');
