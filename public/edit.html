@@ -268,6 +268,55 @@
             <p class="hint">After saving, refresh the public fixtures page to see the latest results.</p>
         </div>
 
+        <div class="page-card" style="margin-top: 24px;">
+            <h2 class="card-title">Playoff Fixtures</h2>
+            <div class="form-row">
+                <label>Fixture
+                    <select id="playoffSelect"></select>
+                </label>
+                <div style="display: flex; gap: 10px; align-items: flex-end;">
+                    <button id="addPlayoffButton" type="button">Add fixture</button>
+                    <button id="deletePlayoffButton" type="button" style="background: #cf2a2a;">Delete fixture</button>
+                </div>
+            </div>
+            <div class="form-row">
+                <label>Date
+                    <input id="playoffDate" type="text" placeholder="Friday 23 May" />
+                </label>
+                <label>Time
+                    <input id="playoffTime" type="text" placeholder="HH:MM" />
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Status
+                    <select id="playoffStatus">
+                        <option value="UPCOMING">UPCOMING</option>
+                        <option value="LIVE">LIVE</option>
+                        <option value="FINAL">FINAL</option>
+                    </select>
+                </label>
+                <label>Home team
+                    <input id="playoffTeam1" type="text" placeholder="Team 1 name" />
+                </label>
+            </div>
+            <div class="form-row">
+                <label>Away team
+                    <input id="playoffTeam2" type="text" placeholder="Team 2 name" />
+                </label>
+                <label>Home score
+                    <input id="playoffScore1" type="number" min="0" />
+                </label>
+                <label>Away score
+                    <input id="playoffScore2" type="number" min="0" />
+                </label>
+            </div>
+            <div class="form-footer">
+                <button id="savePlayoffButton" type="button">Save playoff fixture</button>
+                <div class="status-pill" id="playoffSaveStatus">Not saved</div>
+            </div>
+            <p class="hint">Use this section to manage playoff matchups and results separately from pool matches.</p>
+        </div>
+
         <div class="note-box">
             <p class="small-copy">Password is stored only in this page for demonstration. For real deployments, use a secure backend authentication system.</p>
         </div>
@@ -541,6 +590,19 @@
     const loginForm = document.getElementById('loginForm');
     const saveButton = document.getElementById('saveButton');
     const resetButton = document.getElementById('resetButton');
+    const playoffSelect = document.getElementById('playoffSelect');
+    const playoffStatus = document.getElementById('playoffStatus');
+    const playoffDate = document.getElementById('playoffDate');
+    const playoffTime = document.getElementById('playoffTime');
+    const playoffTeam1 = document.getElementById('playoffTeam1');
+    const playoffTeam2 = document.getElementById('playoffTeam2');
+    const playoffScore1 = document.getElementById('playoffScore1');
+    const playoffScore2 = document.getElementById('playoffScore2');
+    const savePlayoffButton = document.getElementById('savePlayoffButton');
+    const addPlayoffButton = document.getElementById('addPlayoffButton');
+    const deletePlayoffButton = document.getElementById('deletePlayoffButton');
+    const playoffSaveStatus = document.getElementById('playoffSaveStatus');
+    let activePlayoffIndex = 0;
 
     async function loadSavedData() {
         try {
@@ -644,6 +706,7 @@
         ).join('');
         regionSelect.value = activeRegion;
         populateMatchOptions();
+        populatePlayoffOptions();
     }
 
     function populateMatchOptions() {
@@ -667,6 +730,110 @@
         editTeam1.value = match.t1 || '';
         editTeam2.value = match.t2 || '';
         setSaveStatus('Loaded current match details.');
+    }
+
+    function populatePlayoffOptions() {
+        const regionData = tournamentData[activeRegion];
+        regionData.playoffs = regionData.playoffs || [];
+        playoffSelect.innerHTML = regionData.playoffs.length > 0
+            ? regionData.playoffs.map((fixture, index) =>
+                `<option value="${index}">${fixture.d || 'TBD'} ${fixture.t || 'TBD'} — ${fixture.t1 || 'Team 1'} vs ${fixture.t2 || 'Team 2'}</option>`
+            ).join('')
+            : `<option value="0">No playoff fixtures yet</option>`;
+        if (activePlayoffIndex >= regionData.playoffs.length) {
+            activePlayoffIndex = 0;
+        }
+        playoffSelect.value = activePlayoffIndex;
+        fillPlayoffForm();
+    }
+
+    function fillPlayoffForm() {
+        const regionData = tournamentData[activeRegion];
+        const fixture = (regionData.playoffs || [])[activePlayoffIndex];
+        if (fixture) {
+            playoffStatus.value = fixture.st || 'UPCOMING';
+            playoffDate.value = fixture.d || '';
+            playoffTime.value = fixture.t || '';
+            playoffTeam1.value = fixture.t1 || '';
+            playoffTeam2.value = fixture.t2 || '';
+            playoffScore1.value = fixture.s1 != null ? fixture.s1 : '';
+            playoffScore2.value = fixture.s2 != null ? fixture.s2 : '';
+            setPlayoffStatus('Loaded current playoff fixture.');
+        } else {
+            playoffStatus.value = 'UPCOMING';
+            playoffDate.value = '';
+            playoffTime.value = '';
+            playoffTeam1.value = '';
+            playoffTeam2.value = '';
+            playoffScore1.value = '';
+            playoffScore2.value = '';
+            setPlayoffStatus('No playoff fixture selected yet.', false);
+        }
+    }
+
+    function changePlayoff() {
+        activePlayoffIndex = parseInt(playoffSelect.value, 10) || 0;
+        fillPlayoffForm();
+    }
+
+    function setPlayoffStatus(message, success = true) {
+        playoffSaveStatus.textContent = message;
+        playoffSaveStatus.style.background = success ? '#eef8f4' : '#ffe8e8';
+        playoffSaveStatus.style.color = success ? '#0f5a30' : '#8f1a1a';
+    }
+
+    async function handlePlayoffSave() {
+        try {
+            const regionData = tournamentData[activeRegion];
+            regionData.playoffs = regionData.playoffs || [];
+            let fixture = regionData.playoffs[activePlayoffIndex];
+            if (!fixture) {
+                fixture = { d: '', t: '', t1: '', t2: '', s1: 0, s2: 0, st: 'UPCOMING' };
+                regionData.playoffs.push(fixture);
+                activePlayoffIndex = regionData.playoffs.length - 1;
+            }
+            fixture.st = playoffStatus.value;
+            fixture.d = playoffDate.value.trim();
+            fixture.t = playoffTime.value.trim();
+            fixture.t1 = playoffTeam1.value.trim();
+            fixture.t2 = playoffTeam2.value.trim();
+            fixture.s1 = Number(playoffScore1.value || 0);
+            fixture.s2 = Number(playoffScore2.value || 0);
+
+            await saveData();
+            populatePlayoffOptions();
+            setPlayoffStatus('Playoff fixture saved successfully. Refresh public page.');
+        } catch (error) {
+            setPlayoffStatus('Error saving playoff fixture.', false);
+        }
+    }
+
+    function handlePlayoffAdd() {
+        const regionData = tournamentData[activeRegion];
+        regionData.playoffs = regionData.playoffs || [];
+        regionData.playoffs.push({ d: 'TBD', t: '00:00', t1: 'Team 1', t2: 'Team 2', s1: 0, s2: 0, st: 'UPCOMING' });
+        activePlayoffIndex = regionData.playoffs.length - 1;
+        populatePlayoffOptions();
+        setPlayoffStatus('New playoff fixture added. Edit details and save.');
+    }
+
+    async function handlePlayoffDelete() {
+        const regionData = tournamentData[activeRegion];
+        if (!regionData.playoffs || !regionData.playoffs.length) {
+            return setPlayoffStatus('No playoff fixture to delete.', false);
+        }
+        if (!confirm('Delete this playoff fixture?')) return;
+        regionData.playoffs.splice(activePlayoffIndex, 1);
+        if (activePlayoffIndex >= regionData.playoffs.length) {
+            activePlayoffIndex = Math.max(0, regionData.playoffs.length - 1);
+        }
+        try {
+            await saveData();
+            populatePlayoffOptions();
+            setPlayoffStatus('Playoff fixture deleted.');
+        } catch (error) {
+            setPlayoffStatus('Error deleting playoff fixture.', false);
+        }
     }
 
     function changeRegion() {
@@ -744,9 +911,13 @@
 
     loginForm.addEventListener('submit', handleLogin);
     saveButton.addEventListener('click', handleSave);
+    savePlayoffButton.addEventListener('click', handlePlayoffSave);
+    addPlayoffButton.addEventListener('click', handlePlayoffAdd);
+    deletePlayoffButton.addEventListener('click', handlePlayoffDelete);
     resetButton.addEventListener('click', handleReset);
     regionSelect.addEventListener('change', changeRegion);
     matchSelect.addEventListener('change', changeMatch);
+    playoffSelect.addEventListener('change', changePlayoff);
     (async () => {
         await loadSavedData();
         if (sessionStorage.getItem(AUTH_FLAG) === 'true') {
