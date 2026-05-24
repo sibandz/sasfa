@@ -300,7 +300,15 @@
                         <option value="FINAL">FINAL</option>
                     </select>
                 </label>
-                <div></div>
+                <label>Match Type
+                    <input id="playoffType" type="text" list="playoffTypeOptions" placeholder="e.g. Semi-Final" />
+                    <datalist id="playoffTypeOptions">
+                        <option value="Semi-Final 1"></option>
+                        <option value="Semi-Final 2"></option>
+                        <option value="3rd Place (Losers)"></option>
+                        <option value="Final (Winners)"></option>
+                    </datalist>
+                </label>
             </div>
             <div class="form-row">
                 <label>Home team
@@ -687,6 +695,7 @@
     const playoffRegionSelect = document.getElementById('playoffRegionSelect');
     const playoffSelect = document.getElementById('playoffSelect');
     const playoffStatus = document.getElementById('playoffStatus');
+    const playoffType = document.getElementById('playoffType');
     const playoffDate = document.getElementById('playoffDate');
     const playoffTime = document.getElementById('playoffTime');
     const playoffTeam1 = document.getElementById('playoffTeam1');
@@ -923,6 +932,7 @@
         const fixture = (regionData.playoffs || [])[activePlayoffIndex];
         if (fixture) {
             playoffStatus.value = fixture.st || 'UPCOMING';
+            playoffType.value = fixture.type || '';
             playoffDate.value = fixture.d || '';
             playoffTime.value = fixture.t || '';
 
@@ -973,6 +983,7 @@
             setPlayoffStatus('Loaded current playoff fixture.');
         } else {
             playoffStatus.value = 'UPCOMING';
+            playoffType.value = '';
             playoffDate.value = '';
             playoffTime.value = '';
             document.getElementById('playoffTeam1').innerHTML = '';
@@ -1037,6 +1048,7 @@
                 activePlayoffIndex = regionData.playoffs.length - 1;
             }
             fixture.st = playoffStatus.value;
+            fixture.type = playoffType.value.trim();
             fixture.d = playoffDate.value.trim();
             fixture.t = playoffTime.value.trim();
             fixture.t1 = document.getElementById('playoffTeam1').value.trim();
