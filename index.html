@@ -1108,8 +1108,12 @@
 
                 const dayOfWeek = new Date(m.d).toLocaleDateString('en-US', { weekday: 'long' });
 
+                // Add playoff label if it's a playoff match
+                const matchLabel = m.type ? `<div style="text-align: center; font-size: 0.75rem; color: var(--navy-dark); font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">${m.type}</div>` : '';
+
                 html += `
                     <div class="match-card ${m.st}">
+                        ${matchLabel}
                         <div class="match-meta">
                             <div class="match-time">${m.t}</div>
                             <div class="match-day">${dayOfWeek}</div>
