@@ -253,10 +253,10 @@
             </div>
             <div class="form-row">
                 <label>Home team
-                    <input id="editTeam1" type="text" placeholder="Team 1 name" />
+                    <select id="playoffTeam1"></select>
                 </label>
                 <label>Away team
-                    <input id="editTeam2" type="text" placeholder="Team 2 name" />
+                    <select id="playoffTeam2"></select>
                 </label>
             </div>
             <div class="form-footer">
@@ -315,13 +315,20 @@
                     <input id="playoffScore2" type="number" min="0" />
                 </label>
             </div>
+            <div class="form-row">
+                <label>Home Penalties (if draw)
+                    <input id="playoffPenalties1" type="number" min="0" placeholder="0" />
+                </label>
+                <label>Away Penalties (if draw)
+                    <input id="playoffPenalties2" type="number" min="0" placeholder="0" />
+                </label>
+            </div>
             <div class="form-footer">
                 <button id="savePlayoffButton" type="button">Save playoff fixture</button>
                 <div class="status-pill" id="playoffSaveStatus">Not saved</div>
             </div>
             <p class="hint">Use this section to manage playoff matchups and results separately from pool matches.</p>
             </div>
-        </div>
 
         <div class="page-card" style="margin-top: 24px;">
             <h2 class="card-title">National Finals (August)</h2>
@@ -350,13 +357,14 @@
                         <option value="FINAL">FINAL</option>
                     </select>
                 </label>
+                <datalist id="qualifiedTeamsList"></datalist>
                 <label>Home team
-                    <input id="nationalTeam1" type="text" placeholder="Team 1 name" />
+                    <input id="nationalTeam1" type="text" list="qualifiedTeamsList" placeholder="Team 1 name" />
                 </label>
             </div>
             <div class="form-row">
                 <label>Away team
-                    <input id="nationalTeam2" type="text" placeholder="Team 2 name" />
+                    <input id="nationalTeam2" type="text" list="qualifiedTeamsList" placeholder="Team 2 name" />
                 </label>
                 <label>Home score
                     <input id="nationalScore1" type="number" min="0" />
@@ -365,11 +373,20 @@
                     <input id="nationalScore2" type="number" min="0" />
                 </label>
             </div>
+            <div class="form-row">
+                <label>Home Penalties (if draw)
+                    <input id="nationalPenalties1" type="number" min="0" placeholder="0" />
+                </label>
+                <label>Away Penalties (if draw)
+                    <input id="nationalPenalties2" type="number" min="0" placeholder="0" />
+                </label>
+            </div>
             <div class="form-footer">
                 <button id="saveNationalButton" type="button">Save national fixture</button>
                 <div class="status-pill" id="nationalSaveStatus">Not saved</div>
             </div>
             <p class="hint">Use this section to manage the ultimate National Finals knockout stages taking place in August.</p>
+        </div>
         </div>
 
         <div class="note-box">
@@ -903,19 +920,43 @@
             playoffStatus.value = fixture.st || 'UPCOMING';
             playoffDate.value = fixture.d || '';
             playoffTime.value = fixture.t || '';
-            playoffTeam1.value = fixture.t1 || '';
-            playoffTeam2.value = fixture.t2 || '';
+
+            // Build smart dropdown list based on current region
+            let options = [];
+            if (regionData && regionData.pools) {
+                options = Object.values(regionData.pools).flat().map(t => t.name);
+            }
+            options.push("TBD", "1st Pool A", "2nd Pool B", "1st Pool B", "2nd Pool A", "Winner Match 13", "Winner Match 14", "Loser Match 13", "Loser Match 14");
+            options = [...new Set(options)];
+
+            function populateSelect(selectId, currentValue) {
+                const el = document.getElementById(selectId);
+                let hasValue = false;
+                el.innerHTML = options.map(opt => {
+                    const selected = (opt === currentValue) ? 'selected' : '';
+                    if (selected) hasValue = true;
+                    return `<option value="${opt}" ${selected}>${opt}</option>`;
+                }).join('');
+                if (!hasValue && currentValue) el.innerHTML += `<option value="${currentValue}" selected>${currentValue}</option>`;
+            }
+            
+            populateSelect('playoffTeam1', fixture.t1 || '');
+            populateSelect('playoffTeam2', fixture.t2 || '');
             playoffScore1.value = fixture.s1 != null ? fixture.s1 : '';
             playoffScore2.value = fixture.s2 != null ? fixture.s2 : '';
+            document.getElementById('playoffPenalties1').value = fixture.ps1 != null ? fixture.ps1 : '';
+            document.getElementById('playoffPenalties2').value = fixture.ps2 != null ? fixture.ps2 : '';
             setPlayoffStatus('Loaded current playoff fixture.');
         } else {
             playoffStatus.value = 'UPCOMING';
             playoffDate.value = '';
             playoffTime.value = '';
-            playoffTeam1.value = '';
-            playoffTeam2.value = '';
+            document.getElementById('playoffTeam1').innerHTML = '';
+            document.getElementById('playoffTeam2').innerHTML = '';
             playoffScore1.value = '';
             playoffScore2.value = '';
+            document.getElementById('playoffPenalties1').value = '';
+            document.getElementById('playoffPenalties2').value = '';
             setPlayoffStatus('No playoff fixture selected yet.', false);
         }
     }
@@ -974,10 +1015,15 @@
             fixture.st = playoffStatus.value;
             fixture.d = playoffDate.value.trim();
             fixture.t = playoffTime.value.trim();
-            fixture.t1 = playoffTeam1.value.trim();
-            fixture.t2 = playoffTeam2.value.trim();
-            fixture.s1 = Number(playoffScore1.value || 0);
-            fixture.s2 = Number(playoffScore2.value || 0);
+            fixture.t1 = document.getElementById('playoffTeam1').value.trim();
+            fixture.t2 = document.getElementById('playoffTeam2').value.trim();
+            fixture.s1 = playoffScore1.value !== '' ? Number(playoffScore1.value) : null;
+            fixture.s2 = playoffScore2.value !== '' ? Number(playoffScore2.value) : null;
+
+            const pPen1 = document.getElementById('playoffPenalties1').value;
+            const pPen2 = document.getElementById('playoffPenalties2').value;
+            fixture.ps1 = pPen1 !== '' ? Number(pPen1) : null;
+            fixture.ps2 = pPen2 !== '' ? Number(pPen2) : null;
 
             // Auto-update subsequent playoff matches if this one is final and has an outcome
             if (fixture.st === 'FINAL' && fixture.s1 != null && fixture.s2 != null && regionData.playoffs) {
@@ -1050,8 +1096,29 @@
         }
     }
 
+    function populateQualifiedTeamsList() {
+        const list = document.getElementById('qualifiedTeamsList');
+        if (!list) return;
+        let options = [];
+        Object.keys(tournamentData).forEach(region => {
+            if (region === 'National Finals') return;
+            const rData = tournamentData[region];
+            if (rData && rData.playoffs && rData.playoffs.length >= 4) {
+                const finalMatch = rData.playoffs[3];
+                const outcome = getMatchOutcome(finalMatch);
+                if (outcome) {
+                    options.push(outcome.winner);
+                    options.push(outcome.loser);
+                }
+            }
+        });
+        options = [...new Set(options)];
+        list.innerHTML = options.map(o => `<option value="${o}"></option>`).join('');
+    }
+
     // --- National Finals Logic ---
     function populateNationalOptions() {
+        populateQualifiedTeamsList();
         const nationalData = tournamentData["National Finals"];
         if (!nationalData) return;
         const matches = nationalData.matches || [];
@@ -1078,6 +1145,8 @@
             nationalTeam2.value = fixture.t2 || '';
             nationalScore1.value = fixture.s1 != null ? fixture.s1 : '';
             nationalScore2.value = fixture.s2 != null ? fixture.s2 : '';
+            document.getElementById('nationalPenalties1').value = fixture.ps1 != null ? fixture.ps1 : '';
+            document.getElementById('nationalPenalties2').value = fixture.ps2 != null ? fixture.ps2 : '';
             setNationalStatus('Loaded current National fixture.');
         } else {
             nationalStatus.value = 'UPCOMING';
@@ -1087,6 +1156,8 @@
             nationalTeam2.value = '';
             nationalScore1.value = '';
             nationalScore2.value = '';
+            document.getElementById('nationalPenalties1').value = '';
+            document.getElementById('nationalPenalties2').value = '';
             setNationalStatus('No National fixture selected.', false);
         }
     }
@@ -1117,8 +1188,13 @@
             fixture.t = nationalTime.value.trim();
             fixture.t1 = nationalTeam1.value.trim();
             fixture.t2 = nationalTeam2.value.trim();
-            fixture.s1 = Number(nationalScore1.value || 0);
-            fixture.s2 = Number(nationalScore2.value || 0);
+            fixture.s1 = nationalScore1.value !== '' ? Number(nationalScore1.value) : null;
+            fixture.s2 = nationalScore2.value !== '' ? Number(nationalScore2.value) : null;
+
+            const nPen1 = document.getElementById('nationalPenalties1').value;
+            const nPen2 = document.getElementById('nationalPenalties2').value;
+            fixture.ps1 = nPen1 !== '' ? Number(nPen1) : null;
+            fixture.ps2 = nPen2 !== '' ? Number(nPen2) : null;
 
             await saveData();
             populateNationalOptions();
