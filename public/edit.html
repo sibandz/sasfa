@@ -921,10 +921,29 @@
             playoffDate.value = fixture.d || '';
             playoffTime.value = fixture.t || '';
 
-            // Build smart dropdown list based on current region
+            // Build smart dropdown list based on current region's QUALIFIED teams
             let options = [];
             if (regionData && regionData.pools) {
-                options = Object.values(regionData.pools).flat().map(t => t.name);
+                const poolsCopy = JSON.parse(JSON.stringify(regionData.pools));
+                calculateStandings({ pools: poolsCopy, matches: regionData.matches || [] });
+                
+                const poolA = (poolsCopy['Pool A'] || []).slice().sort((a, b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name));
+                const poolB = (poolsCopy['Pool B'] || []).slice().sort((a, b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name));
+                
+                if (poolA[0]) options.push(poolA[0].name);
+                if (poolA[1]) options.push(poolA[1].name);
+                if (poolB[0]) options.push(poolB[0].name);
+                if (poolB[1]) options.push(poolB[1].name);
+            }
+            
+            if (regionData && regionData.playoffs) {
+                regionData.playoffs.forEach(m => {
+                    const outcome = getMatchOutcome(m);
+                    if (outcome) {
+                        options.push(outcome.winner);
+                        options.push(outcome.loser);
+                    }
+                });
             }
             options.push("TBD", "1st Pool A", "2nd Pool B", "1st Pool B", "2nd Pool A", "Winner Match 13", "Winner Match 14", "Loser Match 13", "Loser Match 14");
             options = [...new Set(options)];
@@ -1062,6 +1081,7 @@
             }
             await saveData();
             populatePlayoffOptions();
+            populateNationalOptions();
             setPlayoffStatus('Playoff fixture saved successfully. Refresh public page.');
         } catch (error) {
             setPlayoffStatus('Error saving playoff fixture.', false);
@@ -1290,6 +1310,8 @@
 
             await saveData();
             populateMatchOptions(); // Repopulate to reflect any potential name changes
+            populatePlayoffOptions(); // Refresh playoff selections based on new standings
+            populateNationalOptions(); // Refresh national options
             setSaveStatus('Saved to server successfully. Refresh public page.');
         } catch (error) {
             setSaveStatus('Error saving to server!', false);
