@@ -807,7 +807,14 @@
 
     function getMatchOutcome(match) {
         if (!match || match.st !== 'FINAL' || match.s1 == null || match.s2 == null) return null;
-        if (match.s1 === match.s2) return null; // No clear winner/loser in a draw
+        if (match.s1 === match.s2) {
+            if (match.ps1 != null && match.ps2 != null && match.ps1 !== match.ps2) {
+                return match.ps1 > match.ps2
+                    ? { winner: match.t1, loser: match.t2 }
+                    : { winner: match.t2, loser: match.t1 };
+            }
+            return null; // No clear winner/loser in a draw
+        }
         return match.s1 > match.s2
             ? { winner: match.t1, loser: match.t2 }
             : { winner: match.t2, loser: match.t1 };
@@ -957,6 +964,8 @@
             match.t = editTime.value.trim() || match.t;
             match.s1 = Number(editScore1.value || 0);
             match.s2 = Number(editScore2.value || 0);
+            match.ps1 = editPenalties1.value !== '' ? Number(editPenalties1.value) : null;
+            match.ps2 = editPenalties2.value !== '' ? Number(editPenalties2.value) : null;
             match.t1 = editTeam1.value.trim() || match.t1;
             match.t2 = editTeam2.value.trim() || match.t2;
 
@@ -996,6 +1005,25 @@
     (async () => {
         await loadSavedData();
         if (sessionStorage.getItem(AUTH_FLAG) === 'true') {
+            showEditor();
+        } else {
+            showLogin();
+        }
+        populateRegionOptions();
+    })();
+</script>
+
+</body>
+</html>
+</body>
+</html>
+s();
+    })();
+</script>
+
+</body>
+</html>
+nStorage.getItem(AUTH_FLAG) === 'true') {
             showEditor();
         } else {
             showLogin();

@@ -1087,7 +1087,7 @@
         let statusToFilter = activeContentTab.toUpperCase();
         if (statusToFilter === 'FINISHED') statusToFilter = 'FINAL';
 
-        const filteredMatches = regionData.matches.filter(m => m.st === statusToFilter);
+        const filteredMatches = allRegionMatches.filter(m => m.st === statusToFilter);
 
         if (filteredMatches.length === 0) {
             matchesContainer.innerHTML = `<div class="no-matches">No ${activeContentTab.toLowerCase()} matches for this region. Check back soon for the latest action!</div>`;
@@ -1098,9 +1098,13 @@
                     html += `<div class="date-divider">${m.d}</div>`;
                 }
 
+                let scoreText = `${m.s1}-${m.s2}`;
+                if (m.ps1 != null && m.ps2 != null && (m.ps1 > 0 || m.ps2 > 0 || m.st !== "UPCOMING")) {
+                    scoreText += ` (${m.ps1}-${m.ps2} p)`;
+                }
                 const scoreContent = m.st === "UPCOMING"
-                    ? `${m.t}`
-                    : `${m.s1}-${m.s2}`;
+                    ? scoreText
+                    : scoreText;
 
                 const dayOfWeek = new Date(m.d).toLocaleDateString('en-US', { weekday: 'long' });
 
