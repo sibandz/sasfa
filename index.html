@@ -908,6 +908,19 @@
                 { d: "Sunday 19 April", t: "13:30", t1: "Waterstone College", t2: "Steyn City School", s1: 0, s2: 0, st: "UPCOMING" }
             ]
         },
+        "National Finals": {
+            pools: {},
+            matches: [
+                { d: "Saturday 8 August", t: "09:00", t1: "TBD", t2: "TBD", s1: 0, s2: 0, st: "UPCOMING", type: "Quarter-Final 1" },
+                { d: "Saturday 8 August", t: "10:30", t1: "TBD", t2: "TBD", s1: 0, s2: 0, st: "UPCOMING", type: "Quarter-Final 2" },
+                { d: "Saturday 8 August", t: "12:00", t1: "TBD", t2: "TBD", s1: 0, s2: 0, st: "UPCOMING", type: "Quarter-Final 3" },
+                { d: "Saturday 8 August", t: "13:30", t1: "TBD", t2: "TBD", s1: 0, s2: 0, st: "UPCOMING", type: "Quarter-Final 4" },
+                { d: "Sunday 9 August", t: "10:00", t1: "TBD", t2: "TBD", s1: 0, s2: 0, st: "UPCOMING", type: "Semi-Final 1" },
+                { d: "Sunday 9 August", t: "11:30", t1: "TBD", t2: "TBD", s1: 0, s2: 0, st: "UPCOMING", type: "Semi-Final 2" },
+                { d: "Sunday 9 August", t: "15:00", t1: "TBD", t2: "TBD", s1: 0, s2: 0, st: "UPCOMING", type: "Grand Final" }
+            ],
+            playoffs: []
+        },
     };
 
     let tournamentData = JSON.parse(JSON.stringify(DEFAULT_TOURNAMENT_DATA));
@@ -1060,28 +1073,35 @@
 
         // 3. Calculate and Render Standings (always visible)
         // Create a deep copy of the pools to avoid modifying the original data during calculation.
-        const poolsForDisplay = JSON.parse(JSON.stringify(regionData.pools));
+        const poolsForDisplay = regionData.pools ? JSON.parse(JSON.stringify(regionData.pools)) : {};
 
         // Check if there are live matches to determine if we show a "live table".
-        const hasLiveMatches = regionData.matches.some(m => m.st === 'LIVE');
+        const hasLiveMatches = (regionData.matches || []).some(m => m.st === 'LIVE');
         const statusesToInclude = hasLiveMatches ? ['FINAL', 'LIVE'] : ['FINAL'];
 
         // Calculate standings based on the determined statuses.
-        calculateStandings(poolsForDisplay, regionData.matches, statusesToInclude);
+        calculateStandings(poolsForDisplay, regionData.matches || [], statusesToInclude);
 
-        standingsContainer.innerHTML = Object.keys(poolsForDisplay).map(p => `
-            <div class="pool-card">
-                <div class="pool-title">${p} ${hasLiveMatches ? '<span class="live-indicator">LIVE</span>' : ''}</div>
-                <table>
-                    <thead><tr><th>Team</th><th class="col-data">GD</th><th class="col-data">Pts</th></tr></thead>
-                    <tbody>
-                    ${poolsForDisplay[p]
-                        .sort((a,b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name))
-                        .map(team => `<tr><td class="col-team">${team.name}<span class="team-seed">(#${team.seed})</span></td><td class="col-data">${team.gd}</td><td class="col-data"><span class="col-pts">${team.points}</span></td></tr>`).join('')}
-                    </tbody>
-                </table>
-            </div>
-        `).join('');
+        const standingsArea = document.querySelector('.standings-area');
+        if (Object.keys(poolsForDisplay).length === 0) {
+            if (standingsArea) standingsArea.style.display = 'none';
+            standingsContainer.innerHTML = '';
+        } else {
+            if (standingsArea) standingsArea.style.display = 'block';
+            standingsContainer.innerHTML = Object.keys(poolsForDisplay).map(p => `
+                <div class="pool-card">
+                    <div class="pool-title">${p} ${hasLiveMatches ? '<span class="live-indicator">LIVE</span>' : ''}</div>
+                    <table>
+                        <thead><tr><th>Team</th><th class="col-data">GD</th><th class="col-data">Pts</th></tr></thead>
+                        <tbody>
+                        ${poolsForDisplay[p]
+                            .sort((a,b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name))
+                            .map(team => `<tr><td class="col-team">${team.name}<span class="team-seed">(#${team.seed})</span></td><td class="col-data">${team.gd}</td><td class="col-data"><span class="col-pts">${team.points}</span></td></tr>`).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `).join('');
+        }
 
         // 4. Render Matches based on the active tab
         let statusToFilter = activeContentTab.toUpperCase();
