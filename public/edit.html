@@ -253,10 +253,10 @@
             </div>
             <div class="form-row">
                 <label>Home team
-                    <select id="playoffTeam1"></select>
+                    <input id="editTeam1" type="text" placeholder="Team 1 name" />
                 </label>
                 <label>Away team
-                    <select id="playoffTeam2"></select>
+                    <input id="editTeam2" type="text" placeholder="Team 2 name" />
                 </label>
             </div>
             <div class="form-footer">
@@ -300,14 +300,17 @@
                         <option value="FINAL">FINAL</option>
                     </select>
                 </label>
+                <div></div>
+            </div>
+            <div class="form-row">
                 <label>Home team
                     <select id="playoffTeam1"></select>
                 </label>
-            </div>
-            <div class="form-row">
                 <label>Away team
                     <select id="playoffTeam2"></select>
                 </label>
+            </div>
+            <div class="form-row">
                 <label>Home score
                     <input id="playoffScore1" type="number" min="0" />
                 </label>
@@ -358,14 +361,16 @@
                     </select>
                 </label>
                 <datalist id="qualifiedTeamsList"></datalist>
+            </div>
+            <div class="form-row">
                 <label>Home team
-                    <input id="nationalTeam1" type="text" list="qualifiedTeamsList" placeholder="Team 1 name" />
+                    <select id="nationalTeam1"></select>
+                </label>
+                <label>Away team
+                    <select id="nationalTeam2"></select>
                 </label>
             </div>
             <div class="form-row">
-                <label>Away team
-                    <input id="nationalTeam2" type="text" list="qualifiedTeamsList" placeholder="Team 2 name" />
-                </label>
                 <label>Home score
                     <input id="nationalScore1" type="number" min="0" />
                 </label>
