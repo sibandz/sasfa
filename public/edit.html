@@ -717,8 +717,10 @@
                     } else if (tournamentData[region].pools && tournamentData[region].matches) {
                         tournamentData[region].playoffs = generateDefaultPlayoffFixtures(tournamentData[region]);
                     }
+                    updatePlayoffsFromStandings(tournamentData[region]);
                 }
             });
+            saveData().catch(e => console.error("Initial auto-save failed", e));
         } catch (err) {
             console.error('Unable to load tournament data from server. Using default data.', err);
             // Fallback to default data if server is unavailable
@@ -784,6 +786,36 @@
         });
     }
 
+    function updatePlayoffsFromStandings(regionData) {
+        if (!regionData || !regionData.pools || !regionData.pools["Pool A"] || !regionData.pools["Pool B"]) return;
+
+        const poolsCopy = JSON.parse(JSON.stringify(regionData.pools));
+        calculateStandings({ pools: poolsCopy, matches: regionData.matches });
+
+        const poolA = (poolsCopy['Pool A'] || []).slice().sort((a, b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name));
+        const poolB = (poolsCopy['Pool B'] || []).slice().sort((a, b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name));
+
+        if (!regionData.playoffs || regionData.playoffs.length === 0) {
+            regionData.playoffs = generateDefaultPlayoffFixtures(regionData);
+        } else {
+            // Override Team 1/Team 2 with proper standings if they are still upcoming or are placeholders
+            if (regionData.playoffs[0]) {
+                const p = regionData.playoffs[0];
+                if (p.st === "UPCOMING" || p.t1 === "Team 1" || p.t2 === "Team 2") {
+                    p.t1 = poolA[0] ? poolA[0].name : "1st Pool A";
+                    p.t2 = poolB[1] ? poolB[1].name : "2nd Pool B";
+                }
+            }
+            if (regionData.playoffs[1]) {
+                const p = regionData.playoffs[1];
+                if (p.st === "UPCOMING" || p.t1 === "Team 1" || p.t2 === "Team 2") {
+                    p.t1 = poolB[0] ? poolB[0].name : "1st Pool B";
+                    p.t2 = poolA[1] ? poolA[1].name : "2nd Pool A";
+                }
+            }
+        }
+    }
+
     function generateDefaultPlayoffFixtures(regionData) {
         if (!regionData || !regionData.pools || !regionData.matches) return [];
 
@@ -791,15 +823,15 @@
         const standingsData = { pools: poolsCopy, matches: regionData.matches };
         calculateStandings(standingsData);
 
-        const poolA = (poolsCopy['Pool A'] || []).slice().sort((a, b) => compareTeams(a, b, regionData.matches));
-        const poolB = (poolsCopy['Pool B'] || []).slice().sort((a, b) => compareTeams(a, b, regionData.matches));
+        const poolA = (poolsCopy['Pool A'] || []).slice().sort((a, b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name));
+        const poolB = (poolsCopy['Pool B'] || []).slice().sort((a, b) => (b.points - a.points) || (b.gd - a.gd) || a.name.localeCompare(b.name));
         if (poolA.length < 2 || poolB.length < 2) return [];
 
         return [
-            { d: 'Saturday 23 May', t: '09:00', t1: poolA[0].name, t2: poolB[1].name, s1: null, s2: null, st: 'UPCOMING' },
-            { d: 'Saturday 23 May', t: '10:30', t1: poolA[1].name, t2: poolB[0].name, s1: null, s2: null, st: 'UPCOMING' },
-            { d: 'Saturday 23 May', t: '14:00', t1: 'Loser Match 13', t2: 'Loser Match 14', s1: null, s2: null, st: 'UPCOMING' },
-            { d: 'Saturday 23 May', t: '15:30', t1: 'Winner Match 13', t2: 'Winner Match 14', s1: null, s2: null, st: 'UPCOMING' }
+            { d: 'Saturday 23 May', t: '09:00', t1: poolA[0].name, t2: poolB[1].name, s1: null, s2: null, st: 'UPCOMING', type: 'Semi-Final 1' },
+            { d: 'Saturday 23 May', t: '10:30', t1: poolB[0].name, t2: poolA[1].name, s1: null, s2: null, st: 'UPCOMING', type: 'Semi-Final 2' },
+            { d: 'Saturday 23 May', t: '14:00', t1: 'Loser Match 13', t2: 'Loser Match 14', s1: null, s2: null, st: 'UPCOMING', type: '3rd Place' },
+            { d: 'Saturday 23 May', t: '15:30', t1: 'Winner Match 13', t2: 'Winner Match 14', s1: null, s2: null, st: 'UPCOMING', type: 'Final' }
         ];
     }
 
@@ -1168,13 +1200,17 @@
             match.t = editTime.value.trim() || match.t;
             match.s1 = Number(editScore1.value || 0);
             match.s2 = Number(editScore2.value || 0);
-            match.ps1 = editPenalties1.value !== '' ? Number(editPenalties1.value) : null;
-            match.ps2 = editPenalties2.value !== '' ? Number(editPenalties2.value) : null;
+            
+            const editPenalties1 = document.getElementById('editPenalties1');
+            const editPenalties2 = document.getElementById('editPenalties2');
+            match.ps1 = (editPenalties1 && editPenalties1.value !== '') ? Number(editPenalties1.value) : null;
+            match.ps2 = (editPenalties2 && editPenalties2.value !== '') ? Number(editPenalties2.value) : null;
             match.t1 = editTeam1.value.trim() || match.t1;
             match.t2 = editTeam2.value.trim() || match.t2;
 
             // Recalculate official standings for the entire region before saving
             calculateStandings(tournamentData[activeRegion]);
+            updatePlayoffsFromStandings(tournamentData[activeRegion]);
 
             await saveData();
             populateMatchOptions(); // Repopulate to reflect any potential name changes
