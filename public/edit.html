@@ -301,12 +301,12 @@
                     </select>
                 </label>
                 <label>Home team
-                    <input id="playoffTeam1" type="text" placeholder="Team 1 name" />
+                    <select id="playoffTeam1"></select>
                 </label>
             </div>
             <div class="form-row">
                 <label>Away team
-                    <input id="playoffTeam2" type="text" placeholder="Team 2 name" />
+                    <select id="playoffTeam2"></select>
                 </label>
                 <label>Home score
                     <input id="playoffScore1" type="number" min="0" />
@@ -1161,8 +1161,24 @@
             nationalStatus.value = fixture.st || 'UPCOMING';
             nationalDate.value = fixture.d || '';
             nationalTime.value = fixture.t || '';
-            nationalTeam1.value = fixture.t1 || '';
-            nationalTeam2.value = fixture.t2 || '';
+
+            let options = [];
+            const qList = document.getElementById('qualifiedTeamsList');
+            if (qList) {
+                options = Array.from(qList.options).map(o => o.value);
+            }
+            options.push("TBD", "Winner SF1", "Winner SF2", "Loser SF1", "Loser SF2");
+            options = [...new Set(options)];
+
+            function popSel(id, val) {
+                const el = document.getElementById(id);
+                let hasVal = false;
+                el.innerHTML = options.map(opt => { const sel = opt === val ? 'selected' : ''; if(sel) hasVal = true; return `<option value="${opt}" ${sel}>${opt}</option>`; }).join('');
+                if (!hasVal && val) el.innerHTML += `<option value="${val}" selected>${val}</option>`;
+            }
+            popSel('nationalTeam1', fixture.t1 || '');
+            popSel('nationalTeam2', fixture.t2 || '');
+
             nationalScore1.value = fixture.s1 != null ? fixture.s1 : '';
             nationalScore2.value = fixture.s2 != null ? fixture.s2 : '';
             document.getElementById('nationalPenalties1').value = fixture.ps1 != null ? fixture.ps1 : '';
@@ -1172,8 +1188,8 @@
             nationalStatus.value = 'UPCOMING';
             nationalDate.value = '';
             nationalTime.value = '';
-            nationalTeam1.value = '';
-            nationalTeam2.value = '';
+            document.getElementById('nationalTeam1').innerHTML = '';
+            document.getElementById('nationalTeam2').innerHTML = '';
             nationalScore1.value = '';
             nationalScore2.value = '';
             document.getElementById('nationalPenalties1').value = '';
@@ -1206,8 +1222,8 @@
             fixture.st = nationalStatus.value;
             fixture.d = nationalDate.value.trim();
             fixture.t = nationalTime.value.trim();
-            fixture.t1 = nationalTeam1.value.trim();
-            fixture.t2 = nationalTeam2.value.trim();
+            fixture.t1 = document.getElementById('nationalTeam1').value.trim();
+            fixture.t2 = document.getElementById('nationalTeam2').value.trim();
             fixture.s1 = nationalScore1.value !== '' ? Number(nationalScore1.value) : null;
             fixture.s2 = nationalScore2.value !== '' ? Number(nationalScore2.value) : null;
 
@@ -1390,25 +1406,6 @@
     (async () => {
         await loadSavedData();
         if (sessionStorage.getItem(AUTH_FLAG) === 'true') {
-            showEditor();
-        } else {
-            showLogin();
-        }
-        populateRegionOptions();
-    })();
-</script>
-
-</body>
-</html>
-</body>
-</html>
-s();
-    })();
-</script>
-
-</body>
-</html>
-nStorage.getItem(AUTH_FLAG) === 'true') {
             showEditor();
         } else {
             showLogin();
