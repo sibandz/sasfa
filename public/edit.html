@@ -832,14 +832,14 @@
             // Override Team 1/Team 2 with proper standings if they are still upcoming or are placeholders
             if (regionData.playoffs[0]) {
                 const p = regionData.playoffs[0];
-                if (p.st === "UPCOMING" || p.t1 === "Team 1" || p.t2 === "Team 2") {
+                if (p.st === "UPCOMING" || !p.t1 || !p.t2 || p.t1 === "Team 1" || p.t2 === "Team 2") {
                     p.t1 = poolA[0] ? poolA[0].name : "1st Pool A";
                     p.t2 = poolB[1] ? poolB[1].name : "2nd Pool B";
                 }
             }
             if (regionData.playoffs[1]) {
                 const p = regionData.playoffs[1];
-                if (p.st === "UPCOMING" || p.t1 === "Team 1" || p.t2 === "Team 2") {
+                if (p.st === "UPCOMING" || !p.t1 || !p.t2 || p.t1 === "Team 1" || p.t2 === "Team 2") {
                     p.t1 = poolB[0] ? poolB[0].name : "1st Pool B";
                     p.t2 = poolA[1] ? poolA[1].name : "2nd Pool A";
                 }
@@ -917,7 +917,7 @@
         regionData.playoffs = regionData.playoffs || generateDefaultPlayoffFixtures(regionData);
         playoffSelect.innerHTML = regionData.playoffs.length > 0
             ? regionData.playoffs.map((fixture, index) =>
-                `<option value="${index}">${fixture.d || 'TBD'} ${fixture.t || 'TBD'} — ${fixture.t1 || 'Team 1'} vs ${fixture.t2 || 'Team 2'}</option>`
+                `<option value="${index}">${fixture.d || 'TBD'} ${fixture.t || 'TBD'} — ${fixture.t1 || 'TBD'} vs ${fixture.t2 || 'TBD'}</option>`
             ).join('')
             : `<option value="0">No playoff fixtures yet</option>`;
         if (activePlayoffIndex >= regionData.playoffs.length) {
@@ -1108,7 +1108,7 @@
     function handlePlayoffAdd() {
         const regionData = tournamentData[activePlayoffRegion];
         regionData.playoffs = regionData.playoffs || [];
-        regionData.playoffs.push({ d: 'TBD', t: '00:00', t1: 'Team 1', t2: 'Team 2', s1: 0, s2: 0, st: 'UPCOMING' });
+        regionData.playoffs.push({ d: 'TBD', t: '00:00', t1: '', t2: '', s1: 0, s2: 0, st: 'UPCOMING' });
         activePlayoffIndex = regionData.playoffs.length - 1;
         populatePlayoffOptions();
         setPlayoffStatus('New playoff fixture added. Edit details and save.');
@@ -1161,7 +1161,7 @@
         const matches = nationalData.matches || [];
         nationalSelect.innerHTML = matches.length > 0
             ? matches.map((match, index) =>
-                `<option value="${index}">${match.d || 'TBD'} ${match.t || 'TBD'} — ${match.t1 || 'Team 1'} vs ${match.t2 || 'Team 2'}</option>`
+                `<option value="${index}">${match.d || 'TBD'} ${match.t || 'TBD'} — ${match.t1 || 'TBD'} vs ${match.t2 || 'TBD'}</option>`
             ).join('')
             : `<option value="0">No National fixtures yet</option>`;
         if (activeNationalIndex >= matches.length) {
@@ -1260,7 +1260,7 @@
     function handleNationalAdd() {
         const nationalData = tournamentData["National Finals"];
         nationalData.matches = nationalData.matches || [];
-        nationalData.matches.push({ d: 'TBD', t: '00:00', t1: 'Team 1', t2: 'Team 2', s1: 0, s2: 0, st: 'UPCOMING' });
+        nationalData.matches.push({ d: 'TBD', t: '00:00', t1: '', t2: '', s1: 0, s2: 0, st: 'UPCOMING' });
         activeNationalIndex = nationalData.matches.length - 1;
         populateNationalOptions();
         setNationalStatus('New National fixture added. Edit details and save.');
