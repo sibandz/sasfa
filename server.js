@@ -5,6 +5,8 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 const DATA_FILE = path.join(__dirname, 'tournament-data.json');
+const BIN_ID = process.env.JSONBIN_BIN_ID;
+const API_KEY = process.env.JSONBIN_API_KEY;
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
@@ -26,6 +28,15 @@ app.use(express.static(__dirname));
  */
 app.get('/api/get-data', async (req, res) => {
     try {
+        if (BIN_ID && API_KEY) {
+            const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                headers: { 'X-Master-Key': API_KEY }
+            });
+            if (!response.ok) throw new Error('Failed to fetch from JSONBin');
+            const data = await response.json();
+            return res.json(data.record || {});
+        }
+
         // Check if the file exists first to prevent the 'no such file' error
         try {
             await fs.access(DATA_FILE);
@@ -58,6 +69,19 @@ app.post('/api/save-data', async (req, res) => {
 
         if (!newData || typeof newData !== 'object') {
             return res.status(400).json({ message: 'Invalid data provided.' });
+        }
+
+        if (BIN_ID && API_KEY) {
+            const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': API_KEY,
+                },
+                body: JSON.stringify(newData),
+            });
+            if (!response.ok) throw new Error('Failed to save data to JSONBin');
+            return res.status(200).json({ message: 'Data saved successfully to cloud.' });
         }
 
         await fs.writeFile(DATA_FILE, JSON.stringify(newData, null, 2), 'utf8');
