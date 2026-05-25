@@ -262,7 +262,6 @@
             <div class="form-footer">
                 <button id="saveButton" type="button">Save update</button>
                 <button id="resetButton" type="button" style="background: #cf2a2a;">Reset to Defaults</button>
-                <button id="recoverButton" type="button" style="background: #f39c12; color: #fff;">Recover Local Data</button>
                 <div class="status-pill" id="saveStatus">Not saved</div>
             </div>
             <p class="hint">After saving, refresh the public fixtures page to see the latest results.</p>
@@ -691,7 +690,6 @@
     const loginForm = document.getElementById('loginForm');
     const saveButton = document.getElementById('saveButton');
     const resetButton = document.getElementById('resetButton');
-    const recoverButton = document.getElementById('recoverButton');
     const playoffRegionSelect = document.getElementById('playoffRegionSelect');
     const playoffSelect = document.getElementById('playoffSelect');
     const playoffStatus = document.getElementById('playoffStatus');
@@ -751,7 +749,6 @@
                     updatePlayoffsFromStandings(tournamentData[region]);
                 }
             });
-            saveData().catch(e => console.error("Initial auto-save failed", e));
         } catch (err) {
             console.error('Unable to load tournament data from server. Using default data.', err);
             // Fallback to default data if server is unavailable
@@ -1364,54 +1361,12 @@
         }
     }
 
-    async function handleRecover() {
-        if (!confirm("This will scan your browser's local storage for missing results and merge them into the server. Proceed?")) return;
-        
-        try {
-            let recoveredCount = 0;
-            const keys = ['sasfa-tournament-data', 'halala-cup-data'];
-            
-            keys.forEach(key => {
-                const localStr = localStorage.getItem(key);
-                if (localStr) {
-                    const localData = JSON.parse(localStr);
-                    Object.keys(localData).forEach(region => {
-                        if (tournamentData[region] && localData[region].matches) {
-                            localData[region].matches.forEach((localMatch, idx) => {
-                                if ((localMatch.st === 'FINAL' || localMatch.st === 'LIVE') && tournamentData[region].matches[idx]) {
-                                    if (tournamentData[region].matches[idx].st === 'UPCOMING') {
-                                        tournamentData[region].matches[idx] = { ...localMatch };
-                                        recoveredCount++;
-                                    }
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-
-            if (recoveredCount > 0) {
-                await saveData();
-                populateMatchOptions();
-                setSaveStatus(`Recovered ${recoveredCount} matches! Refresh public page.`);
-                alert(`Successfully recovered ${recoveredCount} missing matches from your browser's cache!`);
-            } else {
-                setSaveStatus('No new results found in local cache.', false);
-                alert("No missing results were found in your browser's local storage.");
-            }
-        } catch (error) {
-            console.error(error);
-            setSaveStatus('Error recovering data.', false);
-        }
-    }
-
     loginForm.addEventListener('submit', handleLogin);
     saveButton.addEventListener('click', handleSave);
     savePlayoffButton.addEventListener('click', handlePlayoffSave);
     addPlayoffButton.addEventListener('click', handlePlayoffAdd);
     deletePlayoffButton.addEventListener('click', handlePlayoffDelete);
     resetButton.addEventListener('click', handleReset);
-    recoverButton.addEventListener('click', handleRecover);
     regionSelect.addEventListener('change', changeRegion);
     matchSelect.addEventListener('change', changeMatch);
     playoffRegionSelect.addEventListener('change', changePlayoffRegion);
