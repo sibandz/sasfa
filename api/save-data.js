@@ -1,15 +1,16 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
+const fs = require('node:fs/promises');
+const path = require('node:path');
 
 const BIN_ID = process.env.JSONBIN_BIN_ID;
 const API_KEY = process.env.JSONBIN_API_KEY;
 const DATA_FILE = path.join(process.cwd(), 'tournament-data.json');
 
 async function writeLocalData(payload) {
+    await fs.mkdir(path.dirname(DATA_FILE), { recursive: true });
     await fs.writeFile(DATA_FILE, JSON.stringify(payload, null, 2), 'utf8');
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method not allowed' });
     }
@@ -17,7 +18,7 @@ export default async function handler(req, res) {
     try {
         const newData = req.body;
 
-        if (!newData || typeof newData !== 'object') {
+        if (!newData || typeof newData !== 'object' || Array.isArray(newData)) {
             return res.status(400).json({ message: 'Invalid data provided.' });
         }
 
@@ -48,4 +49,4 @@ export default async function handler(req, res) {
         console.error('Error saving data:', error);
         res.status(500).json({ message: 'Error saving data.' });
     }
-}
+};

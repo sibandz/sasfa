@@ -1,5 +1,5 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
+const fs = require('node:fs/promises');
+const path = require('node:path');
 
 const BIN_ID = process.env.JSONBIN_BIN_ID;
 const API_KEY = process.env.JSONBIN_API_KEY;
@@ -17,7 +17,7 @@ async function readLocalData() {
     }
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     if (req.method !== 'GET') {
         return res.status(405).json({ message: 'Method not allowed' });
     }
@@ -48,4 +48,4 @@ export default async function handler(req, res) {
         console.error('Error fetching data:', error);
         res.status(500).json({ message: 'Error retrieving data.' });
     }
-}
+};
