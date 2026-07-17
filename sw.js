@@ -15,25 +15,28 @@ self.addEventListener('install', event => {
 
 // Intercept network requests
 self.addEventListener('fetch', event => {
-  // For API requests, try the network first. If it fails (offline), return what's in the cache if available.
+  // For API requests...
   if (event.request.url.includes('/api/')) {
+    // ...that are NOT GET requests (e.g., POST to save data),
+    // just try the network and do not fallback to cache.
+    // This ensures that save errors are not hidden from the app.
+    if (event.request.method !== 'GET') {
+      event.respondWith(fetch(event.request));
+      return;
+    }
+
+    // For GET requests, try the network first, then fallback to cache.
     event.respondWith(
       fetch(event.request).catch(() => caches.match(event.request))
     );
     return;
   }
 
-  // For static assets (HTML, CSS, JS, Images), try the cache first, then the network.
+  // For static assets (HTML, CSS, etc.), try the cache first, then the network.
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request).then(networkResponse => {
-          // Optionally cache new requests dynamically here
-          return networkResponse;
-        });
+        return response || fetch(event.request);
       })
   );
 });
